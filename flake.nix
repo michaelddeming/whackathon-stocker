@@ -177,6 +177,7 @@
                 packages = [
                   virtualenv
                   pkgs.uv
+                  pkgs.pyright
                 ];
                 env = {
                   UV_NO_SYNC = "1";
