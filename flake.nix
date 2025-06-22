@@ -125,6 +125,7 @@
               packages = [
                 python
                 pkgs.uv
+                pkgs.pyright
               ];
               env =
                 {
