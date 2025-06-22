@@ -140,7 +140,7 @@
             };
 
             # Pure development using uv2nix
-            uv2nix =
+            default =
               let
                 editableOverlay = workspace.mkEditablePyprojectOverlay {
                   root = "$REPO_ROOT";
