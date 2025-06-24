@@ -1,5 +1,5 @@
 {
-  description = "flake using uv2nix";
+  description = "flake using uv2nix with Docker image";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -47,80 +47,94 @@
             perSystemPkgsFunction (
               import nixpkgs {
                 inherit system;
-                config.allowUnfree = true; # As per the requested structure; adjust if needed
-                # overlays = []; # Add global overlays for pkgs here if needed.
-                # The original flake didn't have global overlays for pkgs.
+                config.allowUnfree = true;
               }
             )
           );
 
-      # This function defines all outputs for a single system.
-      # It takes 'pkgs' (which is system-specific) as an argument.
       buildOutputsForSystem =
         pkgs:
         let
-          inherit (pkgs) lib; # lib from the system-specific pkgs
+          inherit (pkgs) lib;
 
-          # Load a uv workspace from a workspace root.
-          # Uv2nix treats all uv projects as workspace projects.
+          parsedPyprojectToml = builtins.fromTOML (builtins.readFile ./pyproject.toml);
+          projectName = parsedPyprojectToml.project.name;
+          requiredPythonFromToml = parsedPyprojectToml.project."requires-python" or ">=3.8";
+          extractedPythonVersion =
+            lib.elemAt (lib.splitString "." (lib.elemAt (lib.splitString ">=" requiredPythonFromToml) 1)) 0
+            + "."
+            + lib.elemAt (lib.splitString "." (lib.elemAt (lib.splitString ">=" requiredPythonFromToml) 1)) 1;
+
           workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = ./.; };
-
-          # Create package overlay from workspace.
-          overlay = workspace.mkPyprojectOverlay {
-            # Prefer prebuilt binary wheels as a package source.
-            sourcePreference = "wheel"; # or sourcePreference = "sdist";
-            # Optionally customise PEP 508 environment
-            # environ = {
-            #   platform_release = "5.10.65";
-            # };
-          };
-
-          # Extend generated overlay with build fixups
+          overlay = workspace.mkPyprojectOverlay { sourcePreference = "wheel"; };
           pyprojectOverrides = _final: _prev: {
-            # Implement build fixups here.
-            # Note that uv2nix is _not_ using Nixpkgs buildPythonPackage.
-            # It's using https://pyproject-nix.github.io/pyproject.nix/build.html
+            # Build fixups for specific packages if needed.
           };
 
-          # Use Python 3 from the system-specific pkgs
-          python = pkgs.python3;
+          pythonVersionPackageName = "python${builtins.replaceStrings [ "." ] [ "" ] extractedPythonVersion}";
 
-          # Construct package set
-          pythonSet =
-            # Use base package set from pyproject.nix builders
-            (pkgs.callPackage pyproject-nix.build.packages {
-              inherit python;
-            }).overrideScope
-              (
-                lib.composeManyExtensions [
-                  pyproject-build-systems.overlays.default
-                  overlay
-                  pyprojectOverrides
-                ]
-              );
+          selectedPython =
+            if pkgs ? "${pythonVersionPackageName}" && pkgs."${pythonVersionPackageName}" != null then
+              pkgs."${pythonVersionPackageName}"
+            else if
+              pkgs ? python3
+              && pkgs.python3 != null
+              && lib.versionAtLeast pkgs.python3.version extractedPythonVersion
+            then
+              pkgs.python3
+            else
+              pkgs.python311;
 
-          # Package a virtual environment as our main application.
-          # Enable no optional dependencies for production build.
-          defaultPackage = pythonSet.mkVirtualEnv "stocker-env" workspace.deps.default;
+          python = selectedPython;
 
-        in
-        {
-          # Package for the current system.
-          packages = {
-            default = defaultPackage;
-          };
+          pythonSet = (pkgs.callPackage pyproject-nix.build.packages { inherit python; }).overrideScope (
+            lib.composeManyExtensions [
+              pyproject-build-systems.overlays.default
+              overlay
+              pyprojectOverrides
+            ]
+          );
 
-          # Make stocker runnable with `nix run`
-          apps = {
-            default = {
-              type = "app";
-              program = "${defaultPackage}/bin/stocker";
+          defaultDepSpecs = workspace.depSpecs.default or { };
+          externalDepNames = lib.attrNames defaultDepSpecs;
+
+          allPackageNamesForVenv = externalDepNames ++ [ projectName ];
+
+          specForProductionVenv = lib.listToAttrs (
+            map (name: lib.nameValuePair name [ ]) allPackageNamesForVenv
+          );
+
+          defaultPackage = pythonSet.mkVirtualEnv "stocker-env" specForProductionVenv;
+
+          dockerImage = pkgs.dockerTools.buildImage {
+            name = projectName;
+            tag = "latest";
+            copyToRoot = pkgs.buildEnv {
+              name = "${projectName}-rootfs";
+              paths = [
+                defaultPackage
+                pkgs.busybox
+              ];
+            };
+            config = {
+              Cmd = [ "/bin/${projectName}" ];
+              WorkingDir = "/";
             };
           };
 
-          # Development shells
+        in
+        {
+          packages = {
+            inherit defaultPackage;
+            inherit dockerImage;
+          };
+          apps = {
+            default = {
+              type = "app";
+              program = "${defaultPackage}/bin/${projectName}";
+            };
+          };
           devShells = {
-            # Impurely using uv to manage virtual environments
             impure = pkgs.mkShell {
               packages = [
                 python
@@ -139,40 +153,30 @@
                 unset PYTHONPATH
               '';
             };
-
-            # Pure development using uv2nix
             default =
               let
                 editableOverlay = workspace.mkEditablePyprojectOverlay {
                   root = "$REPO_ROOT";
-                  # Optional: Only enable editable for these packages
-                  # members = [ "stocker" ];
                 };
-
                 editablePythonSet = pythonSet.overrideScope (
                   lib.composeManyExtensions [
                     editableOverlay
                     (final: prev: {
-                      stocker = prev.stocker.overrideAttrs (old: {
-                        src = lib.fileset.toSource {
-                          root = old.src;
-                          fileset = lib.fileset.unions [
-                            (old.src + "/pyproject.toml")
-                            (old.src + "/README.md")
-                            (old.src + "/src")
-                          ];
-                        };
-                        nativeBuildInputs =
-                          old.nativeBuildInputs
-                          ++ final.resolveBuildSystem {
-                            editables = [ ];
-                          };
+                      "${projectName}" = prev."${projectName}".overridePythonAttrs (old: {
+                        # Example: add dev-specific build inputs or patches
+                        # nativeBuildInputs = old.nativeBuildInputs ++ [ someDevTool ];
                       });
                     })
                   ]
                 );
 
-                virtualenv = editablePythonSet.mkVirtualEnv "stocker-dev-env" workspace.deps.all;
+                allDepSpecsForDev = workspace.depSpecs.all or { };
+                allExternalDepNamesForDev = lib.attrNames allDepSpecsForDev;
+                allPackageNamesForDevVenv = allExternalDepNamesForDev ++ [ projectName ];
+
+                specForDevVenv = lib.listToAttrs (map (name: lib.nameValuePair name [ ]) allPackageNamesForDevVenv);
+
+                virtualenv = editablePythonSet.mkVirtualEnv "${projectName}-dev-env" specForDevVenv;
               in
               pkgs.mkShell {
                 packages = [
@@ -187,7 +191,9 @@
                 };
                 shellHook = ''
                   unset PYTHONPATH
-                  export REPO_ROOT=$(git rev-parse --show-toplevel)
+                  export REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
+                  echo "Dev environment for ${projectName} loaded."
+                  echo "Python available at: ${virtualenv}/bin/python"
                 '';
               };
           };
@@ -204,8 +210,8 @@
       devShells = nixpkgs.lib.mapAttrs (
         systemName: perSystemAttrs: perSystemAttrs.devShells
       ) allSystemOutputs;
-
-      # You can also expose other top-level attributes if needed, e.g.:
-      # formatter = forAllSystems (pkgs: pkgs.alejandra);
+      defaultPackage = nixpkgs.lib.mapAttrs (
+        systemName: perSystemAttrs: perSystemAttrs.packages.defaultPackage
+      ) allSystemOutputs;
     };
 }
