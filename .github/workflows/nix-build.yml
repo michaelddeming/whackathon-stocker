@@ -1,4 +1,4 @@
-name: nix build .
+name: nix build
 
 on:
   push:
@@ -24,4 +24,4 @@ jobs:
             experimental-features = nix-command flakes
 
       - name: Run nix build
-        run: nix build .
+        run: nix build
