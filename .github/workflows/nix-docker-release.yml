@@ -1,0 +1,43 @@
+name: docker image
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: install nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            experimental-features = nix-command flakes
+
+      - name: log in to gitHub container registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: build docker image with nix
+        run: nix build .#dockerImage
+
+      - name: load docker image
+        run: docker load < ./result
+
+      - name: tag docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/app:${{ github.ref_name }}
+          docker tag $(docker images -q | head -n 1) $IMAGE_NAME
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: push docker image to ghcr
+        run: docker push ${{ env.IMAGE_NAME }}
