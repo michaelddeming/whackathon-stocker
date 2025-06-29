@@ -125,6 +125,7 @@
         in
         {
           packages = {
+            default = defaultPackage;
             inherit defaultPackage;
             inherit dockerImage;
           };
@@ -162,7 +163,7 @@
                   lib.composeManyExtensions [
                     editableOverlay
                     (final: prev: {
-                      "${projectName}" = prev."${projectName}".overridePythonAttrs (old: {
+                      "${projectName}" = prev."${projectName}".overrideAttrs (old: {
                         # Example: add dev-specific build inputs or patches
                         # nativeBuildInputs = old.nativeBuildInputs ++ [ someDevTool ];
                       });
@@ -209,9 +210,6 @@
       apps = nixpkgs.lib.mapAttrs (systemName: perSystemAttrs: perSystemAttrs.apps) allSystemOutputs;
       devShells = nixpkgs.lib.mapAttrs (
         systemName: perSystemAttrs: perSystemAttrs.devShells
-      ) allSystemOutputs;
-      defaultPackage = nixpkgs.lib.mapAttrs (
-        systemName: perSystemAttrs: perSystemAttrs.packages.defaultPackage
       ) allSystemOutputs;
     };
 }
