@@ -10,6 +10,7 @@ def main():
     print(test_position.average_cost)
     print(test_position.unrealized_gain)
     print(test_position.shares)
+    print(test_position.ticker)
 
 
 

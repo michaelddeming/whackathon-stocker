@@ -5,7 +5,7 @@ class Position:
 
     def __init__(self, ticker: str, shares: float, average_cost: float):
 
-        self.ticker = ticker
+        self.ticker = ticker.lower()
         self.shares = float(shares)
         self.average_cost = float(average_cost)
 
