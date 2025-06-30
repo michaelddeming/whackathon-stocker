@@ -10,8 +10,8 @@ class Position:
                  average_cost: float):
         
         self.ticker = ticker
-        self.shares = shares
-        self.average_cost = average_cost
+        self.shares = float(shares)
+        self.average_cost = float(average_cost)
 
     
     def get_info(self, info_key: str) -> None:
