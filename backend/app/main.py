@@ -7,7 +7,7 @@ def main():
     test_position = Position(ticker="msft", shares=1, average_cost=0)
 
 
-    
+
     
 
 
