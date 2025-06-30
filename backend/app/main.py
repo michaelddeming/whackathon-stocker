@@ -11,7 +11,7 @@ def main():
     test_account = Account(name="Roth IRA", institution="Fidelity")
     test_account.add_position(test_position1)
     test_account.add_position(test_position2)
-    print(test_account.unrealized_gain)
+    print(test_account.total_value)
 
 
 
