@@ -1,5 +1,6 @@
 import datetime
 import requests
+import yfinance as yf
 
 class Position:
 
