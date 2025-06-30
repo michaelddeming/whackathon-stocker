@@ -1,2 +1,7 @@
 venv/
- __pycache__/
+# Ignore all .pyc files
+*.pyc
+
+# Ignore all __pycache__ directories recursively
+__pycache__/
+**/__pycache__/
