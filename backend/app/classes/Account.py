@@ -1,4 +1,4 @@
-from Position import Position
+from .Position import Position
 
 class Account:
 
@@ -29,6 +29,28 @@ class Account:
                 print(f"{ticker.upper()} removed from {self.name.title()}, {self.institution.title()} successfully.")
         else:
             raise ValueError("AccountError: Must provide a Position or ticker.")
+
+    @property
+    def total_value(self):
+
+        if not self.positions:
+            return 0.0
+        total_value = 0
+        for position in self.positions.values():
+            total_value += position.total_value
+        return total_value
+    
+    @property
+    def unrealized_gain(self):
+
+        if not self.positions:
+            return 0.0
+        total_value = 0
+        for position in self.positions.values():
+            total_value += position.total_value
+        return total_value
+    
+
 
 
 
