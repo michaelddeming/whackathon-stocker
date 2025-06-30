@@ -1,24 +1,20 @@
 import yfinance as yf
 
+
 class Position:
 
-    def __init__(self, 
-                 ticker: str,
-                 shares: float,
-                 average_cost: float):
-        
+    def __init__(self, ticker: str, shares: float, average_cost: float):
+
         self.ticker = ticker
         self.shares = float(shares)
         self.average_cost = float(average_cost)
 
-    
     def get_info(self, info_key: str) -> None:
-
         """
         Fetch specific market information for the current ticker using yfinance.
 
         Parameters:
-            info_key (str): The type of information to retrieve. 
+            info_key (str): The type of information to retrieve.
                             Supported values: 'current_price', 'sector'.
 
         Returns:
@@ -50,10 +46,10 @@ class Position:
 
     def update(self, update_key: str, updated_value):
         update_keys = {"shares", "average_cost"}
-        
+
         if update_key not in update_keys:
             raise ValueError("PositionError: Invalid Update Key.")
-        
+
         match update_key:
             case "shares":
                 try:
@@ -63,9 +59,9 @@ class Position:
 
                 if new_shares < 0:
                     raise ValueError("PositionError: Share count must be 0+.")
-        
+
                 self.shares = new_shares
-            
+
             case "average_cost":
                 try:
                     new_average_cost = float(updated_value)
@@ -74,15 +70,15 @@ class Position:
 
                 if new_average_cost < 0:
                     raise ValueError("PositionError: Average Cost must be 0+.")
-        
+
                 self.average_cost = new_average_cost
 
     @property
     def current_price(self):
-        return self.get_info("current_price")  
+        return self.get_info("current_price")
     @property
     def sector(self):
-        return self.get_info("sector")  
+        return self.get_info("sector")
     @property
     def total_value(self):
         return self.current_price * self.shares
