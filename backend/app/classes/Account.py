@@ -34,19 +34,15 @@ class Account:
     def total_value(self):
         if not self.positions:
             return 0.0
-        total_value = 0.0
-        for position in self.positions.values():
-            total_value += position.total_value
-        return total_value
+        return sum(position.total_value for position in self.positions.values())
+
+
     
     @property
     def unrealized_gain(self):
         if not self.positions:
             return 0.0
-        total_gain = 0.0
-        for position in self.positions.values():
-            total_gain += position.unrealized_gain
-        return total_gain
+        return sum(position.unrealized_gain for position in self.positions.values())
     
 
 

@@ -1,17 +1,35 @@
 import yfinance as yf
 from classes.Position import Position
 from classes.Account import Account
+from classes.Portfolio import Portfolio
 
 
 def main():
     
     test_position1 = Position(ticker="aapl", shares=1, average_cost=0)
     test_position2 = Position(ticker="msft", shares=1, average_cost=0)
+    test_position3 = Position(ticker="cava", shares=1, average_cost=0)
+    test_position4 = Position(ticker="tsla", shares=1, average_cost=0)
+    
 
-    test_account = Account(name="Roth IRA", institution="Fidelity")
-    test_account.add_position(test_position1)
-    test_account.add_position(test_position2)
-    print(test_account.total_value)
+    test_account1 = Account(name="Roth IRA", institution="Fidelity")
+    test_account2 = Account(name="Traditional IRA", institution="Robinhood")
+    test_account1.add_position(test_position1)
+    test_account1.add_position(test_position2)
+    test_account2.add_position(test_position3)
+    test_account2.add_position(test_position4)
+    
+    test_portfolio = Portfolio(name="Michael Deming")
+    test_portfolio.add_account(test_account1)
+    test_portfolio.add_account(test_account2)
+    
+    print(test_portfolio.total_value)
+
+    
+    # print(test_account1.total_value)
+    # print(test_account2.total_value)
+    # print(test_account1.unrealized_gain)
+    # print(test_account2.unrealized_gain)
 
 
 

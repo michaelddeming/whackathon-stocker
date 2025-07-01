@@ -29,20 +29,13 @@ class Portfolio:
 
     @property
     def total_value(self):
-
         if not self.accounts:
             return 0.0
-        total_value = 0.0
-        for account in self.accounts.values():
-            total_value += account.total_value
-        return total_value
+        return sum(account.total_value for account in self.accounts.values())
     
     @property
     def unrealized_gain(self):
         if not self.accounts:
             return 0.0
-        total_gain = 0.0
-        for account in self.accounts.values():
-            total_gain += account.unrealized_gain
-        return total_gain
+        return sum(account.unrealized_gain for account in self.accounts.values())
     
