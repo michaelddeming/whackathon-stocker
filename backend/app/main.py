@@ -22,8 +22,10 @@ def main():
     test_portfolio = Portfolio(name="Michael Deming")
     test_portfolio.add_account(test_account1)
     test_portfolio.add_account(test_account2)
-    
     print(test_portfolio.total_value)
+    test_position1.update(new_shares=2, new_average_cost=10)
+    print(test_portfolio.total_value)
+    print(test_portfolio.unrealized_gain)
 
     
     # print(test_account1.total_value)

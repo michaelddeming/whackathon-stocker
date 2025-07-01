@@ -44,34 +44,27 @@ class Position:
             case _:
                 raise ValueError("PositionError: Invalid Info Key.")
 
-    def update(self, update_key: str, updated_value):
-        update_keys = {"shares", "average_cost"}
+    def update(self, new_shares: float, new_average_cost: float):
 
-        if update_key not in update_keys:
-            raise ValueError("PositionError: Invalid Update Key.")
+        try:
+            new_shares = float(new_shares)
+        except ValueError:
+            raise ValueError("PositionError: New share count type invalid.")
 
-        match update_key:
-            case "shares":
-                try:
-                    new_shares = float(updated_value)
-                except ValueError:
-                    raise ValueError("PositionError: Share count type invalid.")
+        if new_shares < 0:
+            raise ValueError("PositionError: New share count must be 0+.")
 
-                if new_shares < 0:
-                    raise ValueError("PositionError: Share count must be 0+.")
+        self.shares = new_shares
 
-                self.shares = new_shares
+        try:
+            new_average_cost = float(new_average_cost)
+        except ValueError:
+            raise ValueError("PositionError: New average cost type invalid.")
 
-            case "average_cost":
-                try:
-                    new_average_cost = float(updated_value)
-                except ValueError:
-                    raise ValueError("PositionError: Average Cost type invalid.")
+        if new_average_cost < 0:
+            raise ValueError("PositionError: New average cost must be 0+.")
 
-                if new_average_cost < 0:
-                    raise ValueError("PositionError: Average Cost must be 0+.")
-
-                self.average_cost = new_average_cost
+        self.average_cost = new_average_cost
 
     @property
     def current_price(self):
