@@ -22,7 +22,7 @@ class Account:
             else:
                 print(f"{position.ticker.upper()} removed from {self.name.title()} ({self.institution.title()}) successfully.")
         elif ticker:
-            rem = self.positions.pop(ticker, None)
+            rem = self.positions.pop(ticker.lower(), None)
             if rem is None:
                 raise KeyError("AccountError: Ticker not found, removal failed.")
             else:
