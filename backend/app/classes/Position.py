@@ -3,11 +3,12 @@ import yfinance as yf
 
 class Position:
 
-    def __init__(self, ticker: str, shares: float, average_cost: float):
+    def __init__(self, ticker: str, shares: float, average_cost: float, parent_account=None):
 
         self.ticker = ticker.lower()
         self.shares = float(shares)
         self.average_cost = float(average_cost)
+        self._parent_account = parent_account
 
     def get_info(self, info_key: str) -> None:
         """
@@ -45,7 +46,9 @@ class Position:
                 raise ValueError("PositionError: Invalid Info Key.")
 
     def update(self, new_shares: float, new_average_cost: float):
-
+        curr_total_value = self.total_value
+        curr_unrealized_gain = self.unrealized_gain
+        
         try:
             new_shares = float(new_shares)
         except ValueError:
@@ -54,8 +57,6 @@ class Position:
         if new_shares < 0:
             raise ValueError("PositionError: New share count must be 0+.")
 
-        self.shares = new_shares
-
         try:
             new_average_cost = float(new_average_cost)
         except ValueError:
@@ -63,8 +64,26 @@ class Position:
 
         if new_average_cost < 0:
             raise ValueError("PositionError: New average cost must be 0+.")
-
+        
+        if self._parent_account:
+            self._parent_account._total_value -= curr_total_value
+            self._parent_account._unrealized_gain -= curr_unrealized_gain
+            if self._parent_account._parent_portfolio:
+                self._parent_account._parent_portfolio._total_value -= curr_total_value
+                self._parent_account._parent_portfolio._unrealized_gain -= curr_unrealized_gain
+        
+        self.shares = new_shares
         self.average_cost = new_average_cost
+        
+        new_total_value = self.total_value
+        new_unrealized_gain = self.unrealized_gain
+
+        if self._parent_account:
+            self._parent_account._total_value += new_total_value
+            self._parent_account._unrealized_gain += new_unrealized_gain
+            if self._parent_account._parent_portfolio:
+                self._parent_account._parent_portfolio._total_value += new_total_value
+                self._parent_account._parent_portfolio._unrealized_gain += new_unrealized_gain
 
     @property
     def current_price(self):
