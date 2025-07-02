@@ -8,13 +8,14 @@ class Portfolio:
         self.accounts: dict[str, Account] = {}
         self._total_value = 0.0
         self._unrealized_gain = 0.0
+        print(f"New Portfolio '{self.name}' successfully created.\n")
 
     def add_account(self, account: Account) -> None:
         account._parent_portfolio = self
         self.accounts[account.name] = account
         self._total_value += account.total_value
         self._unrealized_gain += account.unrealized_gain
-        print(f"{account.name.title()} held with {account.institution.title()} added to {self.name.title()} Portfolio successfully.")
+        print(f"{account.name.title()} held with {account.institution.title()} added to {self.name.title()} Portfolio successfully.\n")
 
     def delete_account(self, account: Account, account_name: str):
         if account:
@@ -33,9 +34,9 @@ class Portfolio:
 
     @property
     def total_value(self):
-        return self._total_value
+        return round(self._total_value, 2)
     
     @property
     def unrealized_gain(self):
-        return self._unrealized_gain
+        return round(self._unrealized_gain, 2)
     
