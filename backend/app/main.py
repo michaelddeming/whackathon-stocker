@@ -14,12 +14,13 @@ def main():
 
     
     test_position1 = Position(ticker="aapl", shares=23.865214, average_cost=199.12)
-    print(test_position1.current_price)
 
 
     test_account1.add_position(test_position1)
+    test_account1.add_cash(1000.0)
 
-
+    print(test_account1.total_value)
+    print(test_account1.cash)
     print(test_portfolio.total_value)
     print(test_portfolio.unrealized_gain)
         

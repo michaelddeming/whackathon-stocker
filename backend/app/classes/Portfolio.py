@@ -15,6 +15,7 @@ class Portfolio:
         self.accounts[account.name] = account
         self._total_value += account.total_value
         self._unrealized_gain += account.unrealized_gain
+        self._total_value += account._cash
         print(f"{account.name.title()} held with {account.institution.title()} added to {self.name.title()} Portfolio successfully.\n")
 
     def delete_account(self, account: Account, account_name: str):
@@ -26,9 +27,11 @@ class Portfolio:
             raise ValueError("AccountError: Must provide a Position or ticker.")    
         
         if rem is None:
-                raise KeyError("PortfolioError: Account name not found, removal failed.")   
+                raise KeyError("PortfolioError: Account name not found, removal failed.")  
         self._total_value -= rem.total_value
         self._unrealized_gain -= rem.unrealized_gain
+        self._cash -= rem._cash    
+
         print(f"{rem.name.upper()} held with {rem.institution.title()} was removed from {self.name.title()} Portfolio successfully.")
     
 

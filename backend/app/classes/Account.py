@@ -53,8 +53,10 @@ class Account:
             raise ValueError("AccountError: Total cash value cannot be negative.")
         current_cash = self._cash 
         self._total_value -= current_cash
+        self._parent_portfolio._total_value -= current_cash
         self._cash = new_cash
         self._total_value += new_cash
+        self._parent_portfolio._total_value += new_cash
 
         print(f"{self.name.title()} cash reserve successfully overwritten as ${new_cash}.")
 
@@ -65,19 +67,21 @@ class Account:
             raise ValueError("AccountError: Cash to add must be greater than $0.")
         self._cash += cash_to_add
         self._total_value += cash_to_add
+        self._parent_portfolio._total_value += cash_to_add
         print(f"Added ${cash_to_add:0.2f} successfully to {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}")
     
     def remove_cash(self, cash_to_remove: float):
         """Remove a specified positive cash amount from the account reserve."""
-        
+
         if cash_to_remove < 0:
             raise ValueError("AccountError: Cash to remove must be greater than $0.")
         if cash_to_remove > self._cash:
             raise ValueError(f"AccountError: Current cash balance, {self._cash:0.2f} not sufficient for removal of {cash_to_remove:0.2f} from the {self.name.title()}.")
         
-        new_cash_total = self._cash - cash_to_remove
+        
         self._total_value -= cash_to_remove
-        self._cash = new_cash_total
+        self._parent_portfolio._total_value -= cash_to_remove
+        self._cash -= cash_to_remove
         print(f"Removed ${cash_to_remove:0.2f} successfully from {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}")
 
         
