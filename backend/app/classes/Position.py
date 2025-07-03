@@ -45,7 +45,7 @@ class Position:
             case _:
                 raise ValueError("PositionError: Invalid Info Key.")
 
-    def update(self, new_shares: float, new_average_cost: float):
+    def update_position(self, new_shares: float, new_average_cost: float):
         curr_stock_asset_value = self.stock_asset_value
         curr_unrealized_gain = self.unrealized_gain
         

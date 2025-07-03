@@ -1,5 +1,5 @@
 from .Position import Position
-
+from .Transaction import Transaction
 
 class Account:
 
@@ -36,6 +36,8 @@ class Account:
             self._parent_portfolio._unrealized_gain += position.unrealized_gain
             print(f"Portfolio: {self._parent_portfolio.name.title()} successfully updated.\n")
 
+        Transaction(transaction_type="add_position", amount=position.total_value)
+        
     def delete_position(self, position:Position=None, ticker:str=None):
         
         if position:
@@ -81,7 +83,7 @@ class Account:
         self._parent_portfolio._cash += cash_to_add
         print(f"Added ${cash_to_add:0.2f} successfully to {self.name.title()} cash reserve. New cash balance is ${self._cash:0.2f}\n")
     
-    def remove_cash(self, cash_to_remove: float):
+    def delete_cash(self, cash_to_remove: float):
         """Remove a specified positive cash amount from the account reserve."""
 
         if cash_to_remove < 0:
