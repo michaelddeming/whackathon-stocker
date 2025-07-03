@@ -58,14 +58,19 @@ class Account:
         """Update the private Account._cash variable to a new positive value."""
         if new_cash < 0:
             raise ValueError("AccountError: Total cash value cannot be negative.")
-        current_cash = self._cash 
-        self._stock_asset_value -= current_cash
-        self._parent_portfolio._stock_asset_value -= current_cash
-        self._cash = new_cash
-        self._stock_asset_value += new_cash
-        self._parent_portfolio._stock_asset_value += new_cash
+        if new_cash == self.cash:
+            raise ValueError("AccountError: Cash overwrite fail, new cash value is equal to old cash value.")
+        current_cash = self.cash 
 
+        self._cash = new_cash
         print(f"{self.name.title()} cash reserve successfully overwritten as ${new_cash}.")
+        
+        if self._parent_portfolio:
+            self._parent_portfolio._cash -= current_cash
+            self._parent_portfolio._cash += new_cash
+            print(f"{self._parent_portfolio.name.title()} cash reserve successfully increased by ${new_cash - current_cash}.")
+
+        
 
     def add_cash(self, cash_to_add: float):
         """Add a positive value of cash to the Account._cash variable."""
