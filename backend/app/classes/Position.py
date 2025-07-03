@@ -6,6 +6,7 @@ class Position:
     def __init__(self, ticker: str, shares: float, average_cost: float, parent_account=None):
 
         self.ticker = ticker.lower()
+        self.name = f"{self.ticker.upper()} | {self._parent_account.name.title()}, {self._parent_account.institution.title()}"
         self.shares = float(shares)
         self.average_cost = float(average_cost)
         self._parent_account = parent_account
