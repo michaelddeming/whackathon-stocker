@@ -34,26 +34,5 @@ def main():
     print(test_portfolio.cash)
     print(test_portfolio.total_value)
 
-    test_account1.remove_cash(100)
-    test_account2.remove_cash(100)
-
-    print()
-    print(test_portfolio.stock_asset_value)
-    print(test_portfolio.cash)
-    print(test_portfolio.total_value)
-    print()
-    print(test_account1.total_value)
-    print(test_account1.stock_asset_value)
-    print(test_account1.cash)
-    print()
-    print(test_account2.total_value)
-    print(test_account2.stock_asset_value)
-    print(test_account2.cash)
-    print()
-
-
-        
-
-
 if __name__ == "__main__":
     main()
