@@ -8,7 +8,7 @@ class Account:
         self.name = name
         self.institution = institution
         self._parent_portfolio = parent_portfolio
-        self._total_value = 0.0
+        self._stock_asset_value = 0.0
         self._unrealized_gain = 0.0
         self._cash = 0.0
         self.positions: dict[str, Position] = {}
@@ -21,11 +21,11 @@ class Account:
             raise ValueError(f"AccountError: {self.name.title()} already has a position for {position.ticker.upper()} stock of {position.shares} share(s) w/ an average cost of ${position.average_cost}.")
         else:
             self.positions[position.ticker] = position
-        self._total_value += position.total_value
+        self._stock_asset_value += position.total_value
         self._unrealized_gain += position.unrealized_gain
         print(f"{position.shares} share(s) of {position.ticker.upper()} successfully added to {self.name} held with {self.institution.title()}.\n")
         if self._parent_portfolio:
-            self._parent_portfolio._total_value += position.total_value
+            self._parent_portfolio._stock_asset_value += position.total_value
             self._parent_portfolio._unrealized_gain += position.unrealized_gain
             print(f"Portfolio: {self._parent_portfolio.name.title()} successfully updated.\n")
 
@@ -39,7 +39,7 @@ class Account:
             raise ValueError("AccountError: Must provide a Position or ticker.")
         if rem is None:
             raise KeyError(f"AccountError: {(position.ticker if position else ticker).upper()} not found, removal failed.")
-        self._total_value -= rem.total_value
+        self._stock_asset_value -= rem.total_value
         self._unrealized_gain -= rem.unrealized_gain
         print(f"{(position.ticker if position else ticker).upper()} removed successfully from {self.name.title()} held with {self.institution.title()}.\n")
         if self._parent_portfolio:
@@ -52,10 +52,10 @@ class Account:
         if new_cash < 0:
             raise ValueError("AccountError: Total cash value cannot be negative.")
         current_cash = self._cash 
-        self._total_value -= current_cash
+        self._stock_asset_value -= current_cash
         self._parent_portfolio._total_value -= current_cash
         self._cash = new_cash
-        self._total_value += new_cash
+        self._stock_asset_value += new_cash
         self._parent_portfolio._total_value += new_cash
 
         print(f"{self.name.title()} cash reserve successfully overwritten as ${new_cash}.")
@@ -66,8 +66,7 @@ class Account:
         if cash_to_add <= 0:
             raise ValueError("AccountError: Cash to add must be greater than $0.")
         self._cash += cash_to_add
-        self._total_value += cash_to_add
-        self._parent_portfolio._total_value += cash_to_add
+        self._parent_portfolio._cash += cash_to_add
         print(f"Added ${cash_to_add:0.2f} successfully to {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}")
     
     def remove_cash(self, cash_to_remove: float):
@@ -78,9 +77,7 @@ class Account:
         if cash_to_remove > self._cash:
             raise ValueError(f"AccountError: Current cash balance, {self._cash:0.2f} not sufficient for removal of {cash_to_remove:0.2f} from the {self.name.title()}.")
         
-        
-        self._total_value -= cash_to_remove
-        self._parent_portfolio._total_value -= cash_to_remove
+        self._parent_portfolio._cash -= cash_to_remove
         self._cash -= cash_to_remove
         print(f"Removed ${cash_to_remove:0.2f} successfully from {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}")
 
@@ -91,7 +88,11 @@ class Account:
 
     @property
     def total_value(self):
-        return self._total_value
+        return self._stock_asset_value + self._cash
+    
+    @property
+    def stock_asset_value(self):
+        return self._stock_asset_value
     
     @property
     def unrealized_gain(self):

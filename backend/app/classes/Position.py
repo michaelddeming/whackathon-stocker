@@ -46,7 +46,7 @@ class Position:
                 raise ValueError("PositionError: Invalid Info Key.")
 
     def update(self, new_shares: float, new_average_cost: float):
-        curr_total_value = self.total_value
+        curr_stock_asset_value = self.stock_asset_value
         curr_unrealized_gain = self.unrealized_gain
         
         try:
@@ -66,23 +66,23 @@ class Position:
             raise ValueError("PositionError: New average cost must be 0+.")
         
         if self._parent_account:
-            self._parent_account._total_value -= curr_total_value
+            self._parent_account._total_value -= curr_stock_asset_value
             self._parent_account._unrealized_gain -= curr_unrealized_gain
             if self._parent_account._parent_portfolio:
-                self._parent_account._parent_portfolio._total_value -= curr_total_value
+                self._parent_account._parent_portfolio._stock_asset_value -= curr_stock_asset_value
                 self._parent_account._parent_portfolio._unrealized_gain -= curr_unrealized_gain
         
         self.shares = new_shares
         self.average_cost = new_average_cost
         
-        new_total_value = self.total_value
+        new_stock_asset_value = self.stock_asset_value
         new_unrealized_gain = self.unrealized_gain
 
         if self._parent_account:
-            self._parent_account._total_value += new_total_value
+            self._parent_account._stock_asset_value += new_stock_asset_value
             self._parent_account._unrealized_gain += new_unrealized_gain
             if self._parent_account._parent_portfolio:
-                self._parent_account._parent_portfolio._total_value += new_total_value
+                self._parent_account._parent_portfolio._stock_asset_value += new_stock_asset_value
                 self._parent_account._parent_portfolio._unrealized_gain += new_unrealized_gain
 
     @property
