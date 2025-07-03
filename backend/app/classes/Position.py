@@ -66,7 +66,7 @@ class Position:
             raise ValueError("PositionError: New average cost must be 0+.")
         
         if self._parent_account:
-            self._parent_account._total_value -= curr_stock_asset_value
+            self._parent_account._stock_asset_value -= curr_stock_asset_value
             self._parent_account._unrealized_gain -= curr_unrealized_gain
             if self._parent_account._parent_portfolio:
                 self._parent_account._parent_portfolio._stock_asset_value -= curr_stock_asset_value

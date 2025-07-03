@@ -93,11 +93,6 @@ class Account:
         self._cash -= cash_to_remove
         print(f"Removed ${cash_to_remove:0.2f} successfully from {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}")
 
-        
-
-
-
-
     @property
     def total_value(self):
         return self._stock_asset_value + self._cash
