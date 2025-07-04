@@ -14,8 +14,9 @@ class Account:
         self.positions: dict[str, Position] = {}
 
     def add_position(self, position: Position):
-        # sync the Position to the account
+        # sync the Position to the account and set the Position name to include the institution.
         position._parent_account = self
+        position.name = f"{position.ticker.upper()} | {self.name.title()}, {self.institution.title()}"
         
         # check if there is already a Position w/ ticker.
         already_found_position = self.positions.get(position.ticker, None)
@@ -36,7 +37,7 @@ class Account:
             self._parent_portfolio._unrealized_gain += position.unrealized_gain
             print(f"Portfolio: {self._parent_portfolio.name.title()} successfully updated.\n")
 
-        Transaction(transaction_type="add_position", amount=position.total_value)
+        Transaction(transaction_type="add_position", amount=position.total_value, parent=self)
         
     def delete_position(self, position:Position=None, ticker:str=None):
         
