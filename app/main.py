@@ -2,8 +2,9 @@ import customtkinter as ctk
 
 from CustomWidgets.StockerHeaderFrame import StockerHeaderFrame
 from CustomWidgets.StockerTabView import StockerTabView
-from CustomWidgets.StockerFooterFrame import StockerFooterFrame
 
+
+from CustomWidgets.StockerPortfolio import StockerPortfolio
 
 class App(ctk.CTk):
 
@@ -26,10 +27,8 @@ class App(ctk.CTk):
         self.StockerHeaderFrame.pack(side="top", fill="x", pady=(15,0), padx=15)
 
         self.StockerTabView = StockerTabView(master=self)
-        self.StockerTabView.pack(fill="both",expand=True, padx=15)
+        self.StockerTabView.pack(fill="both", expand=True, padx=15, pady=(0,15))
 
-        self.StockerFooterFrame = StockerFooterFrame(master=self)
-        self.StockerFooterFrame.pack(side="bottom",fill="x", pady=(15,15), padx=15)
 
 
  
