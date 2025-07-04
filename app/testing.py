@@ -1,7 +1,8 @@
 import yfinance as yf
-from classes.Position import Position
+from Classes.Position import Position
 from Classes.Account import Account
 from Classes.Portfolio import Portfolio
+from Classes.Transaction import Transaction
 
 
 def main():
