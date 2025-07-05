@@ -1,15 +1,29 @@
 from .Account import Account
 import json
+from typing import Self
 
 class Portfolio:
 
-    def __init__(self, name: str):
+    defaults = {
+        "name": "New Portfolio",
+        "accounts": {},
+        "cash": 0.0,
+        "stock_asset_value": 0.0,
+        "unrealize_gain": 0.0,
+    }
 
-        self.name = name
-        self.accounts: dict[str, Account] = {}
-        self._cash = 0.0
-        self._stock_asset_value = 0.0
-        self._unrealized_gain = 0.0
+    def __init__(self, 
+                 name: str | None = None,
+                 accounts: dict[str, Account] | None = None,
+                 cash: float | None = None, 
+                 stock_asset_value: float | None = None, 
+                 unrealized_gain: float | None = None):
+
+        self.name = name if name else self.defaults.get("name")
+        self.accounts = accounts if accounts else self.defaults.get("accounts")
+        self._cash = cash if cash else self.defaults.get("cash")
+        self._stock_asset_value = stock_asset_value if stock_asset_value else self.defaults.get("stock_asset_value")
+        self._unrealized_gain = unrealized_gain if unrealized_gain else self.defaults.get("unrealized_gain")
         print(f"New Portfolio '{self.name}' successfully created.\n")
 
     def add_account(self, account: Account) -> None:
@@ -60,11 +74,25 @@ class Portfolio:
         temp_path = "app/database/portfolio.json"
         try:
             with open(temp_path, "w", newline="") as file:
-
                 json.dump(self.to_dict(), file)
-
         except FileNotFoundError:
-            print("PortfolioError: Database file 'portfolio.json' does not exist.")
+            raise ValueError("PortfolioError: Database file 'portfolio.json' does not exist.")
+
+    @classmethod
+    def load_portfolio(cls, file_path: str) -> Self:
+        try:
+            with open(file_path, "r", newline="") as portfolio_file:
+                file_content = json.load(portfolio_file)
+                data = cls.defaults | file_content
+                return cls(**data)
+        except FileNotFoundError:
+            raise ValueError("PortfolioError: Database file 'portfolio.json' does not exist.")
+
+    @classmethod
+    def create_portfolio(cls, name: str) -> Self:
+        new_portfolio = cls(name=name)
+        return new_portfolio
+
     
     @property
     def total_value(self):
