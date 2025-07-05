@@ -5,11 +5,12 @@ from Classes.Portfolio import Portfolio
 from Classes.Transaction import Transaction
 
 from PIL import Image
+
+
 def main():
 
     # Create Portfolio Object
     test_portfolio = Portfolio(name="Deming Investments")
-
 
     # Create Account Object(s)
     test_account1 = Account(name="Individual Taxable", institution="Robinhood")
@@ -30,7 +31,6 @@ def main():
     test_account1.add_cash(100)
     test_account2.add_cash(100)
 
-    
     print(test_portfolio.stock_asset_value)
     print(test_portfolio.cash)
     print(test_portfolio.total_value)

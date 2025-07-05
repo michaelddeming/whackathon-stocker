@@ -3,21 +3,22 @@ from datetime import datetime
 
 class Transaction:
 
+    transaction_types = {
+        "add_position", 
+        "delete_position", 
+        "overwrite_cash", 
+        "add_cash", 
+        "delete_cash",
+        "add_account",
+        "delete_account",
+        "update_position"
+        }
     def __init__(self,
                  transaction_type: str,
                  amount: float,
                  parent: object,
-                 notes: str=None):
+                 notes: str | None = None):
         
-        self.transaction_types = {"add_position", 
-                                  "delete_position", 
-                                  "overwrite_cash", 
-                                  "add_cash", 
-                                  "delete_cash",
-                                  "add_account",
-                                  "delete_account",
-                                  "update_position"
-                                  }
         if transaction_type not in self.transaction_types:
             raise ValueError("TransactionError: Invalid transaction_type.")
         self.transaction_type = transaction_type
@@ -27,9 +28,9 @@ class Transaction:
         self.datetime = datetime.today()
         
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         
-        transaction_dict = {
+        return {
             "transaction_type": self.transaction_type,
             "amount": self.amount,
             "datetime": self.datetime.isoformat(),
@@ -37,10 +38,16 @@ class Transaction:
             "notes": "N/A" if self.notes is None else self.notes,
         }
 
-        return transaction_dict
 
+    def description(self, length: str = "full"):
+        lengths = {"short", "full"}
 
-
-    @property
-    def description(self):
-        return f"Transaction: {self.parent.name.title()} | {self.transaction_type} | {self.amount} on {self.datetime.date}@{self.datetime.time} | NOTES: {"N/A" if self.notes is None else self.notes.capitalize()}."
+        if length not in lengths:
+            raise ValueError("TransactionError: Transaction string length parameter not accepted.")
+        
+        match length:
+            case "short":
+                return f"Transaction: {self.parent.name.title()} | {self.transaction_type} | {self.amount} on {self.datetime.date()}@{self.datetime.time()}."
+                
+            case "full":
+                return f"Transaction: {self.parent.name.title()} | {self.transaction_type} | {self.amount} on {self.datetime.date()}@{self.datetime.time()} | NOTES: {"N/A" if self.notes is None else self.notes.capitalize()}."
