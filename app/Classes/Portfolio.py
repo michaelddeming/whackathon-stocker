@@ -1,4 +1,5 @@
 from .Account import Account
+import json
 
 class Portfolio:
 
@@ -42,7 +43,29 @@ class Portfolio:
 
         print(f"{rem.name.upper()} held with {rem.institution.title()} was removed from {self.name.title()} Portfolio successfully.")
     
+    def to_dict(self) -> dict:
 
+        portfolio_dict =  {
+            "name":self.name,
+            "accounts":self.accounts,
+            "cash":self.cash,
+            "stock_asset_value": self.stock_asset_value,
+            "unrealized_gain": self.unrealized_gain,
+        }
+        print("Portfolio dictionary successfully created!")
+        return portfolio_dict
+
+
+    def save_portfolio(self) -> None:
+        temp_path = "app/database/portfolio.json"
+        try:
+            with open(temp_path, "w", newline="") as file:
+
+                json.dump(self.to_dict(), file)
+
+        except FileNotFoundError:
+            print("PortfolioError: Database file 'portfolio.json' does not exist.")
+    
     @property
     def total_value(self):
         return round(self._stock_asset_value + self._cash, 2)
