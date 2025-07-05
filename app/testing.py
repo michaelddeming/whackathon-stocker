@@ -4,7 +4,7 @@ from Classes.Account import Account
 from Classes.Portfolio import Portfolio
 from Classes.Transaction import Transaction
 
-
+from PIL import Image
 def main():
 
     # Create Portfolio Object
@@ -32,6 +32,12 @@ def main():
     print(test_portfolio.total_value)
     print(test_portfolio.unrealized_gain)
 
+
+try:
+    img = Image.open("app/assets/imgs/stocker_logo_full_dark.png")
+    img.show()
+except FileNotFoundError:
+    print("File not found.")
 
 if __name__ == "__main__":
     main()
