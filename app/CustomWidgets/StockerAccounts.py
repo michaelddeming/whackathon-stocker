@@ -111,7 +111,7 @@ class StockerAccounts(ctk.CTkFrame):
 
         # Accounts Frame Right Section
         self.StockerAccountsRightFrame = ctk.CTkFrame(
-            master=self, fg_color="transparent"
+            master=self, fg_color="transparent",
         )
         self.StockerAccountsRightFrame.pack_propagate(False)
         self.StockerAccountsRightFrame.pack(
@@ -121,7 +121,7 @@ class StockerAccounts(ctk.CTkFrame):
             master=self.StockerAccountsRightFrame, height=75, fg_color="transparent"
         )
         self.selected_account_information_header.pack_propagate(False)
-        self.selected_account_information_header.pack(fill="x")
+        self.selected_account_information_header.pack(fill="x", pady=(15, 0))
         self.selected_account_information_header.grid_propagate(False)
 
         self.selected_account_information_header.rowconfigure(0, weight=1)
@@ -179,12 +179,10 @@ class StockerAccounts(ctk.CTkFrame):
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION TABLE -------------------------->
 
-        self.selected_account_information_table_frame = ctk.CTkFrame(
+        self.selected_account_information_table_frame = ctk.CTkScrollableFrame(
             master=self.StockerAccountsRightFrame, fg_color="transparent"
         )
-        self.selected_account_information_table_frame.pack_propagate(False)
-        self.selected_account_information_table_frame.pack(fill="both", expand=True)
-        self.selected_account_information_table_frame.grid_propagate(False)
+        self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(15, 0))
 
         # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
         self.headers = [
@@ -199,6 +197,26 @@ class StockerAccounts(ctk.CTkFrame):
 
         self.table_data = [
             self.headers,
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
+            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
