@@ -8,15 +8,22 @@ class StockerTransactions(ctk.CTkFrame):
         super().__init__(master, **kwargs, )
 
         # Accounts Frame Left Section
-        self.StockerAccountsLeftFrame = ctk.CTkFrame(
+        self.StockerTransactionsLeftFrame = ctk.CTkFrame(
             master=self, width=300, fg_color="transparent"
         )
-        self.StockerAccountsLeftFrame.pack_propagate(False)
-        self.StockerAccountsLeftFrame.grid_propagate(False)
-        self.StockerAccountsLeftFrame.pack(
+        self.StockerTransactionsLeftFrame.pack_propagate(False)
+        self.StockerTransactionsLeftFrame.grid_propagate(False)
+        self.StockerTransactionsLeftFrame.pack(
             side="left", fill="y", padx=(15, 7.5), pady=(5, 15)
         )
 
+
+
+
+
+
+
+        
          # Accounts Frame Right Section
         self.StockerTransactionsRightFrame = ctk.CTkFrame(
             master=self, fg_color="transparent",

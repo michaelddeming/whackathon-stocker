@@ -74,6 +74,7 @@ class StockerAccounts(ctk.CTkFrame):
         self.position_search_frame.rowconfigure(1, weight=1)
         self.position_search_frame.rowconfigure(2, weight=1)
         self.position_search_frame.rowconfigure(3, weight=1)
+        self.position_search_frame.rowconfigure(3, weight=1)
 
         self.position_search_frame.columnconfigure(0, weight=1)
         self.position_search_frame.columnconfigure(1, weight=1)
@@ -82,22 +83,41 @@ class StockerAccounts(ctk.CTkFrame):
             self.position_search_frame, text=f"Positions", fg_color="transparent"
         ).grid(row=0, column=0, columnspan=2)
 
+        # POSITION SEACH MENU | POSITION HEADING/FILTER DROPDOWN LABEL: "Position Filter:"
+        self.position_filter_dropdown_label = ctk.CTkLabel(
+            self.position_search_frame, text=f"Position Filter", fg_color="transparent"
+        ).grid(row=1, column=0)
+
+        # POSITION SEARCH MENU | POSITION HEADING/FILTER DROPDOWN-BOX: "Position Heading"
+        self.position_headings = [
+            "ticker",
+            "share count",
+            "average cost",
+            "current price",
+            "asset value",
+            "unrealized gain",
+            "parent account",
+        ]
+        self.position_search_heading_dropdown = ctk.CTkComboBox(
+            master=self.position_search_frame, values=self.position_headings
+        ).grid(row=1, column=1)
+
         # POSITION SEARCH MENU | POSITION SEARCHBOX LABEL: "Search Position(s)"
         self.positions_search_searchbox_label = ctk.CTkLabel(
             self.position_search_frame,
             text=f"Search Position(s)",
             fg_color="transparent",
-        ).grid(row=1, column=0)
+        ).grid(row=2, column=0)
 
         # POSITION SEARCH MENU | POSITION SEARCHBOX: "Ticker"
         self.positions_search_searchbox = ctk.CTkEntry(
-            master=self.position_search_frame, placeholder_text="Ticker (AAPL)"
-        ).grid(row=1, column=1)
+            master=self.position_search_frame, placeholder_text="Type Here"
+        ).grid(row=2, column=1)
 
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT BUTTON: "Search Position(s)"
         self.positions_search_submit_button = ctk.CTkButton(
             master=self.position_search_frame, text="Search Position(s)"
-        ).grid(row=2, column=0, columnspan=2)
+        ).grid(row=3, column=0, columnspan=2)
 
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT STATUS LABEL: "Status: ..."
         self.positions_search_status_message = "N/A"
@@ -105,7 +125,7 @@ class StockerAccounts(ctk.CTkFrame):
             self.position_search_frame,
             text=f"Position Search Status: {self.positions_search_status_message}",
             fg_color="transparent",
-        ).grid(row=3, column=0, columnspan=2)
+        ).grid(row=4, column=0, columnspan=2)
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION HEADER -------------------------->
 
@@ -185,18 +205,9 @@ class StockerAccounts(ctk.CTkFrame):
         self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(15, 0))
 
         # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
-        self.headers = [
-            "ticker",
-            "share count",
-            "average cost",
-            "current price",
-            "asset value",
-            "unrealized gain",
-            "parent account",
-        ]
 
         self.table_data = [
-            self.headers,
+            self.position_headings,
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
             ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
