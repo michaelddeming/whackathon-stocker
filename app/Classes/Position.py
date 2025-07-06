@@ -3,14 +3,15 @@ import yfinance as yf
 
 class Position:
 
-    def __init__(self, ticker: str, shares: float, average_cost: float, parent_account=None):
+    def __init__(
+        self, ticker: str, shares: float, average_cost: float, parent_account=None
+    ):
 
         self.ticker = ticker.lower()
         self._parent_account = parent_account
         self.name = f"{self.ticker.upper()} | Unlinked Position."
         self.shares = float(shares)
         self.average_cost = float(average_cost)
-        
 
     def get_info(self, info_key: str) -> None:
         """
@@ -50,7 +51,7 @@ class Position:
     def update_position(self, new_shares: float, new_average_cost: float):
         curr_stock_asset_value = self.stock_asset_value
         curr_unrealized_gain = self.unrealized_gain
-        
+
         try:
             new_shares = float(new_shares)
         except ValueError:
@@ -66,17 +67,21 @@ class Position:
 
         if new_average_cost < 0:
             raise ValueError("PositionError: New average cost must be 0+.")
-        
+
         if self._parent_account:
             self._parent_account._stock_asset_value -= curr_stock_asset_value
             self._parent_account._unrealized_gain -= curr_unrealized_gain
             if self._parent_account._parent_portfolio:
-                self._parent_account._parent_portfolio._stock_asset_value -= curr_stock_asset_value
-                self._parent_account._parent_portfolio._unrealized_gain -= curr_unrealized_gain
-        
+                self._parent_account._parent_portfolio._stock_asset_value -= (
+                    curr_stock_asset_value
+                )
+                self._parent_account._parent_portfolio._unrealized_gain -= (
+                    curr_unrealized_gain
+                )
+
         self.shares = new_shares
         self.average_cost = new_average_cost
-        
+
         new_stock_asset_value = self.stock_asset_value
         new_unrealized_gain = self.unrealized_gain
 
@@ -84,18 +89,25 @@ class Position:
             self._parent_account._stock_asset_value += new_stock_asset_value
             self._parent_account._unrealized_gain += new_unrealized_gain
             if self._parent_account._parent_portfolio:
-                self._parent_account._parent_portfolio._stock_asset_value += new_stock_asset_value
-                self._parent_account._parent_portfolio._unrealized_gain += new_unrealized_gain
+                self._parent_account._parent_portfolio._stock_asset_value += (
+                    new_stock_asset_value
+                )
+                self._parent_account._parent_portfolio._unrealized_gain += (
+                    new_unrealized_gain
+                )
 
     @property
     def current_price(self):
         return self.get_info("current_price")
+
     @property
     def sector(self):
         return self.get_info("sector")
+
     @property
     def total_value(self):
         return self.current_price * self.shares
+
     @property
     def unrealized_gain(self):
         return (self.current_price - self.average_cost) * self.shares

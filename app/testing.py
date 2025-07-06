@@ -28,13 +28,7 @@ def main():
     test_account1.add_position(test_position1)
     test_account2.add_position(test_position2)
 
-    test_account1.add_cash(100)
-    test_account2.add_cash(100)
-
-    print(test_portfolio.stock_asset_value)
-    print(test_portfolio.cash)
-    print(test_portfolio.total_value)
-    print(test_portfolio.unrealized_gain)
+    test_portfolio.save_portfolio()
 
 
 # try:
