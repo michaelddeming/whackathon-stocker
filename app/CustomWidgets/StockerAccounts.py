@@ -1,5 +1,6 @@
 
 import customtkinter as ctk
+from CTkTable import *
 
 class StockerAccounts(ctk.CTkFrame):
     
@@ -9,7 +10,7 @@ class StockerAccounts(ctk.CTkFrame):
         self.pack_propagate(False)
 
         # Accounts Frame Left Section
-        self.StockerAccountsLeftFrame = ctk.CTkFrame(master=self, width=400, border_color="black", border_width=1)
+        self.StockerAccountsLeftFrame = ctk.CTkFrame(master=self, width=400, border_width=1)
         self.StockerAccountsLeftFrame.pack_propagate(False)
         self.StockerAccountsLeftFrame.grid_propagate(False)
         self.StockerAccountsLeftFrame.pack(side="left", fill="y", padx=(15, 7.5), pady=(5, 15))
@@ -71,7 +72,7 @@ class StockerAccounts(ctk.CTkFrame):
 
         
         # Accounts Frame Right Section
-        self.StockerAccountsRightFrame = ctk.CTkFrame(master=self, width=710, border_color="black", border_width=1)
+        self.StockerAccountsRightFrame = ctk.CTkFrame(master=self, width=710, fg_color="transparent")
         self.StockerAccountsRightFrame.pack_propagate(False)
         self.StockerAccountsRightFrame .pack(side="right", fill="y", padx=(7.5, 15), pady=(5, 15))
 
@@ -83,7 +84,7 @@ class StockerAccounts(ctk.CTkFrame):
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION HEADER -------------------------->
 
-        self.selected_account_information_header = ctk.CTkFrame(master=self.StockerAccountsRightFrame, height=75, border_color="black", border_width=1)
+        self.selected_account_information_header = ctk.CTkFrame(master=self.StockerAccountsRightFrame, height=75, fg_color="transparent")
         self.selected_account_information_header.pack_propagate(False)
         self.selected_account_information_header.pack(fill="x")
         self.selected_account_information_header.grid_propagate(False)
@@ -116,6 +117,22 @@ class StockerAccounts(ctk.CTkFrame):
         
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT STOCK ASSET VALUE BUTTON: "Refresh Value"
         self.selected_account_refresh_value_button = ctk.CTkButton(self.selected_account_information_header, text=f"Refresh Value").grid(row=1, column=2)
+
+
+        # <-------------------------- SELECETED ACCOUNT INFORMATION TABLE -------------------------->
+
+        self.selected_account_information_table_frame = ctk.CTkFrame(master=self.StockerAccountsRightFrame, fg_color="transparent")
+        self.selected_account_information_table_frame.pack_propagate(False)
+        self.selected_account_information_table_frame.pack(fill="both", expand=True)
+        self.selected_account_information_table_frame.grid_propagate(False)
+
+        # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
+        self.headers = ["ticker", "share count", "average cost", "current price", "asset value", "unrealized gain", "parent account"]
+        
+        self.table_data = [self.headers, ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"], ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"]]
+        
+        self.account_information_table = CTkTable(master=self.selected_account_information_table_frame,row=len(self.table_data), column=len(self.table_data[0]), values=self.table_data, header_color="grey", corner_radius=4, wraplength=75)
+        self.account_information_table.pack(pady=(15))
 
 
         
