@@ -16,7 +16,7 @@ class StockerHeaderFrame(ctk.CTkFrame):
         self.logo = ctk.CTkImage(
             light_image=Image.open(light_mode),
             dark_image=Image.open(dark_mode),
-            size=(1000, 150))
+            size=(1000, 160))
         
         self.logo_label = ctk.CTkLabel(self, image=self.logo, text="")
         self.logo_label.pack(fill="both", expand=True)

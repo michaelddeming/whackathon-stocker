@@ -1,6 +1,7 @@
 
 import customtkinter as ctk
 from CustomWidgets.StockerPortfolio import StockerPortfolio
+from CustomWidgets.StockerAccounts import StockerAccounts
 
 class StockerTabView(ctk.CTkTabview):
 
@@ -15,4 +16,6 @@ class StockerTabView(ctk.CTkTabview):
         
         self.StockerPortfolio = StockerPortfolio(master=self.tab("Portfolio"))
         self.StockerPortfolio.pack(fill="both", expand=True)
+        self.StockerAccounts = StockerAccounts(master=self.tab("Accounts"))
+        self.StockerAccounts.pack(fill="both", expand=True)
 
