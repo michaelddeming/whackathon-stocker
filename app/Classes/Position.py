@@ -4,14 +4,23 @@ import yfinance as yf
 class Position:
 
     def __init__(
-        self, ticker: str, shares: float, average_cost: float, parent_account=None
+        self,
+        ticker: str,
+        shares: float,
+        average_cost: float,
+        parent_account=None,
     ):
 
         self.ticker = ticker.lower()
         self._parent_account = parent_account
-        self.name = f"{self.ticker.upper()} | Unlinked Position."
         self.shares = float(shares)
         self.average_cost = float(average_cost)
+
+    def __str__(self):
+        base = f"{self.ticker.upper()}"
+        if self.parent_account is None:
+            return f"{base} | Unlinked Position."
+        return f"{base} | {self.parent_account.name.title()}, {self.parent_account.institution.title()}"
 
     def get_info(self, info_key: str) -> None:
         """
@@ -96,6 +105,18 @@ class Position:
                     new_unrealized_gain
                 )
 
+    def to_dict(self):
+        return {
+            "ticker": self.ticker,
+            "parent_account": (
+                (self.parent_account.name, self.parent_account.institution)
+                if self.parent_account
+                else None
+            ),
+            "shares": self.shares,
+            "average_cost": self.average_cost,
+        }
+
     @property
     def current_price(self):
         return self.get_info("current_price")
@@ -111,3 +132,7 @@ class Position:
     @property
     def unrealized_gain(self):
         return (self.current_price - self.average_cost) * self.shares
+
+    @property
+    def parent_account(self):
+        return self._parent_account

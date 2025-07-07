@@ -1,4 +1,46 @@
 {
     "name": "Deming Investments",
-    "accounts": {
-        "Individual Taxable": 
+    "cash": 0.0,
+    "stock_asset_value": 427.1,
+    "unrealized_gain": 427.1,
+    "accounts": [
+        {
+            "name": "Individual Taxable",
+            "institution": "Robinhood",
+            "parent_portfolio": "Deming Investments",
+            "stock_asset_value": 213.55,
+            "unrealized_gain": 213.55,
+            "cash": 0.0,
+            "positions": [
+                {
+                    "ticker": "aapl",
+                    "parent_account": [
+                        "Individual Taxable",
+                        "Robinhood"
+                    ],
+                    "shares": 1.0,
+                    "average_cost": 0.0
+                }
+            ]
+        },
+        {
+            "name": "Roth IRA",
+            "institution": "Fidelity",
+            "parent_portfolio": "Deming Investments",
+            "stock_asset_value": 213.55,
+            "unrealized_gain": 213.55,
+            "cash": 0.0,
+            "positions": [
+                {
+                    "ticker": "aapl",
+                    "parent_account": [
+                        "Roth IRA",
+                        "Fidelity"
+                    ],
+                    "shares": 1.0,
+                    "average_cost": 0.0
+                }
+            ]
+        }
+    ]
+}

@@ -78,10 +78,14 @@ class Portfolio:
 
         portfolio_dict = {
             "name": self.name,
-            "accounts": self.accounts,
             "cash": self.cash,
             "stock_asset_value": self.stock_asset_value,
             "unrealized_gain": self.unrealized_gain,
+            "accounts": (
+                [account.to_dict() for account in self.accounts.values()]
+                if self.accounts
+                else []
+            ),
         }
         print("Portfolio dictionary successfully created!")
         return portfolio_dict
@@ -90,8 +94,8 @@ class Portfolio:
         temp_path = "app/database/portfolio.json"
         try:
             with open(temp_path, "w", newline="") as file:
-                dict_obj = self.to_dict()
-                json.dump(dict_obj, file, indent=4)
+
+                json.dump(self.to_dict(), file, indent=4)
         except FileNotFoundError:
             raise ValueError(
                 "PortfolioError: Database file 'portfolio.json' does not exist."

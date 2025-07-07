@@ -4,21 +4,30 @@ from .Transaction import Transaction
 
 class Account:
 
-    def __init__(self, name: str, institution: str, parent_portfolio, stock_asset_value:float=None,
-                 unrealized_gain:float=None, cash:float=None,  positions: dict[str, Position]=None,):
+    def __init__(
+        self,
+        name: str,
+        institution: str,
+        parent_portfolio=None,
+        stock_asset_value: float = None,
+        unrealized_gain: float = None,
+        cash: float = None,
+        positions: dict[str, Position] = None,
+    ):
 
         self.name = name
         self.institution = institution
         self._parent_portfolio = parent_portfolio
-        self._stock_asset_value = stock_asset_value if stock_asset_value is not None else 0.0
+        self._stock_asset_value = (
+            stock_asset_value if stock_asset_value is not None else 0.0
+        )
         self._unrealized_gain = unrealized_gain if unrealized_gain is not None else 0.0
         self._cash = cash if cash is not None else 0.0
         self.positions = positions if positions is not None else {}
 
     def add_position(self, position: Position):
-        # sync the Position to the account and set the Position name to include the institution.
+        # sync the Position to the account.
         position._parent_account = self
-        position.name = f"{position.ticker.upper()} | {self.name.title()}, {self.institution.title()}"
 
         # check if there is already a Position w/ ticker.
         already_found_position = self.positions.get(position.ticker, None)
@@ -127,13 +136,17 @@ class Account:
     def to_dict(self) -> dict:
 
         return {
-        "name": self.name,
-        "institution": self.institution,
-        "parent_portfolio": self.parent_portfolio,
-        "stock_asset_value":self.stock_asset_value,
-        "unrealized_gain": self.unrealized_gain,
-        "cash": self.cash,
-        "positions": self.positions
+            "name": self.name,
+            "institution": self.institution,
+            "parent_portfolio": self.parent_portfolio.name,
+            "stock_asset_value": self.stock_asset_value,
+            "unrealized_gain": self.unrealized_gain,
+            "cash": self.cash,
+            "positions": (
+                [position.to_dict() for position in self.positions.values()]
+                if self.positions
+                else []
+            ),
         }
 
     @property
@@ -151,7 +164,7 @@ class Account:
     @property
     def cash(self):
         return self._cash
-    
+
     @property
     def parent_portfolio(self):
         return self._parent_portfolio

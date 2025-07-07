@@ -29,6 +29,8 @@ def main():
     test_account2.add_position(test_position2)
 
     test_portfolio.save_portfolio()
+    loaded_portfolio = Portfolio.load_portfolio("app/database/portfolio.json")
+    print(loaded_portfolio.__dict__)
 
 
 # try:
