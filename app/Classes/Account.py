@@ -4,15 +4,16 @@ from .Transaction import Transaction
 
 class Account:
 
-    def __init__(self, name: str, institution: str, parent_portfolio=None):
+    def __init__(self, name: str, institution: str, parent_portfolio, stock_asset_value:float=None,
+                 unrealized_gain:float=None, cash:float=None,  positions: dict[str, Position]=None,):
 
         self.name = name
         self.institution = institution
         self._parent_portfolio = parent_portfolio
-        self._stock_asset_value = 0.0
-        self._unrealized_gain = 0.0
-        self._cash = 0.0
-        self.positions: dict[str, Position] = {}
+        self._stock_asset_value = stock_asset_value if stock_asset_value is not None else 0.0
+        self._unrealized_gain = unrealized_gain if unrealized_gain is not None else 0.0
+        self._cash = cash if cash is not None else 0.0
+        self.positions = positions if positions is not None else {}
 
     def add_position(self, position: Position):
         # sync the Position to the account and set the Position name to include the institution.
@@ -123,6 +124,18 @@ class Account:
             f"Removed ${cash_to_remove:0.2f} successfully from {self.name.title()} cash reserve. New cash balance is {self._cash:0.2f}"
         )
 
+    def to_dict(self) -> dict:
+
+        return {
+        "name": self.name,
+        "institution": self.institution,
+        "parent_portfolio": self.parent_portfolio,
+        "stock_asset_value":self.stock_asset_value,
+        "unrealized_gain": self.unrealized_gain,
+        "cash": self.cash,
+        "positions": self.positions
+        }
+
     @property
     def total_value(self):
         return self._stock_asset_value + self._cash
@@ -138,3 +151,7 @@ class Account:
     @property
     def cash(self):
         return self._cash
+    
+    @property
+    def parent_portfolio(self):
+        return self._parent_portfolio
