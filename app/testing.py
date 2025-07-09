@@ -30,7 +30,10 @@ def main():
 
     test_portfolio.save_portfolio()
     loaded_portfolio = Portfolio.load_portfolio("app/database/portfolio.json")
-    print(loaded_portfolio.__dict__)
+    print(loaded_portfolio.to_dict())
+    test_portfolio.save_portfolio()
+
+
 
 
 # try:
