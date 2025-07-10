@@ -1,15 +1,15 @@
 {
     "name": "Deming Investments",
     "cash": 0.0,
-    "stock_asset_value": 420.02,
-    "unrealized_gain": 420.02,
+    "stock_asset_value": 422.28,
+    "unrealized_gain": 422.28,
     "accounts": [
         {
             "name": "Individual Taxable",
             "institution": "Robinhood",
             "parent_portfolio": "Deming Investments",
-            "stock_asset_value": 210.01,
-            "unrealized_gain": 210.01,
+            "stock_asset_value": 211.14,
+            "unrealized_gain": 211.14,
             "cash": 0.0,
             "positions": [
                 {
@@ -27,8 +27,8 @@
             "name": "Roth IRA",
             "institution": "Fidelity",
             "parent_portfolio": "Deming Investments",
-            "stock_asset_value": 210.01,
-            "unrealized_gain": 210.01,
+            "stock_asset_value": 211.14,
+            "unrealized_gain": 211.14,
             "cash": 0.0,
             "positions": [
                 {

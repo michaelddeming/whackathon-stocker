@@ -108,17 +108,9 @@ class Portfolio:
                 converted_accounts = {}
                 
                 for account in loaded_portfolio.accounts:
-                    loaded_account = Account(**account)
+                    loaded_account = Account.from_dict(account)
+                    # set parent linkage
                     loaded_account._parent_portfolio = loaded_portfolio
-                    
-                    converted_positions = {}
-                    for position in loaded_account.positions:
-                        loaded_position = Position(**position)
-                        loaded_position._parent_account = loaded_account
-                        converted_positions[loaded_position.ticker] = loaded_position
-                    
-                    # overwrite the account.positions var (currently from the file) as the converted positions dict object structure.
-                    loaded_account.positions = converted_positions
                     converted_accounts[loaded_account.name] = loaded_account
                 
                 # overwrite the portfolio.accounts dict object structure with the converted accounts.

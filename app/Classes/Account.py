@@ -1,5 +1,6 @@
 from .Position import Position
 from .Transaction import Transaction
+from typing import Self
 
 
 class Account:
@@ -148,6 +149,23 @@ class Account:
                 else []
             ),
         }
+    @classmethod
+    def from_dict(cls, account: dict) -> Self:
+
+        new_account = cls(**account)
+        new_account.positions = {}
+
+        for position in account["positions"]:
+            # create new Position from position_dict
+            new_position = Position.from_dict(position)
+            # link the self.Account (new_account) as the parent to the Position, new_position.
+            new_position._parent_account = new_account
+
+            new_account.positions[new_position.ticker] = new_position
+
+        return new_account
+
+
 
     @property
     def total_value(self):

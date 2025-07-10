@@ -4,9 +4,9 @@ from CTkTable import *
 
 class StockerAccounts(ctk.CTkFrame):
 
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, portfolio, **kwargs):
         super().__init__(master, **kwargs)
-
+        self.PORTFOLIO = portfolio
         self.pack_propagate(False)
 
         # Accounts Frame Left Section
@@ -46,7 +46,8 @@ class StockerAccounts(ctk.CTkFrame):
         ).grid(row=1, column=0)
 
         # ACCOUNT SELECT DROPDOWN | DROPDOWN-BOX: Account Names
-        self.account_names = ["Roth IRA", "Taxable Account", "Traditional 401k", "all"]
+        self.account_names = ["All Accounts"] + list(self.PORTFOLIO.accounts.keys())
+        print(self.account_names)
         self.select_accounts_dropdown_dropdown = ctk.CTkComboBox(
             master=self.account_select_frame, values=self.account_names
         ).grid(row=1, column=1)
@@ -205,40 +206,33 @@ class StockerAccounts(ctk.CTkFrame):
         self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(15, 0))
 
         # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
+            # "ticker",
+            # "share count",
+            # "average cost",
+            # "current price",
+            # "asset value",
+            # "unrealized gain",
+            # "parent account",
+        data = {}
 
-        self.table_data = [
-            self.position_headings,
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-            ["AAPL", 5, 200.00, 200.00, 1000.00, 0.0, "Roth IRA (Fidelity)"],
-        ]
+        for account in self.PORTFOLIO.accounts.values():
+            account_data = []
+            account_positions = account.positions.values()
+            for position in account_positions:
+                account_data.append([position.ticker, position.shares, position.average_cost, position.current_price, position.total_value, position.unrealized_gain, position.parent_account.name])
+                
+            data[account.name] = account_data
+
+        print(data)
+
+        all = [self.position_headings]
+        for account in data.values():
+            all += account
+        
+        print(all)
+        self.table_data = all
+            
+        
 
         self.account_information_table = CTkTable(
             master=self.selected_account_information_table_frame,

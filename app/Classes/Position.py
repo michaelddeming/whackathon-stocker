@@ -1,4 +1,5 @@
 import yfinance as yf
+from typing import Self
 
 
 class Position:
@@ -116,7 +117,11 @@ class Position:
             "shares": self.shares,
             "average_cost": self.average_cost,
         }
+    @classmethod
+    def from_dict(cls, position: dict) -> Self:
+        return cls(**position)
 
+    
     @property
     def current_price(self):
         return self.get_info("current_price")
