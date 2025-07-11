@@ -43,19 +43,22 @@ class StockerAccounts(ctk.CTkFrame):
             self.account_select_frame,
             text=f"Select Account(s)",
             fg_color="transparent",
-        ).grid(row=1, column=0)
+        )
+        self.select_accounts_dropdown_dropdown_label.grid(row=1, column=0)
 
         # ACCOUNT SELECT DROPDOWN | DROPDOWN-BOX: Account Names
-        self.account_names = ["All Accounts"] + list(self.PORTFOLIO.accounts.keys())
+        self.account_names = ["All Accounts"] + [key.title() for key in self.PORTFOLIO.accounts.keys()]
         print(self.account_names)
         self.select_accounts_dropdown_dropdown = ctk.CTkComboBox(
             master=self.account_select_frame, values=self.account_names
-        ).grid(row=1, column=1)
+        )
+        self.select_accounts_dropdown_dropdown.grid(row=1, column=1)
 
         # ACCOUNT SELECT DROPDOWN | SUBMIT BUTTON: "View Account(s)"
         self.submit_account_view_button = ctk.CTkButton(
-            master=self.account_select_frame, text="View Account(s)"
-        ).grid(row=2, column=0, columnspan=2)
+            master=self.account_select_frame, text="View Account(s)", command=self.view_accounts
+        )
+        self.submit_account_view_button.grid(row=2, column=0, columnspan=2)
 
         # ACCOUNT SELECT DROPDOWN | STATUS LABEL: "Select Account(s)"
         self.account_dropdown_status_message = "N/A"
@@ -63,7 +66,8 @@ class StockerAccounts(ctk.CTkFrame):
             self.account_select_frame,
             text=f"Status: {self.account_dropdown_status_message}",
             fg_color="transparent",
-        ).grid(row=3, column=0, columnspan=2)
+        )
+        self.select_accounts_dropdown_status_label.grid(row=3, column=0, columnspan=2)
 
         # <-------------------------- POSITION SEARCH MENU -------------------------->
         self.position_search_frame = ctk.CTkFrame(
@@ -82,12 +86,14 @@ class StockerAccounts(ctk.CTkFrame):
         # POSITION SEARCH MENU | TITLE: "Positions"
         self.positions_search_menu_title_label = ctk.CTkLabel(
             self.position_search_frame, text=f"Positions", fg_color="transparent"
-        ).grid(row=0, column=0, columnspan=2)
+        )
+        self.positions_search_menu_title_label.grid(row=0, column=0, columnspan=2)
 
         # POSITION SEACH MENU | POSITION HEADING/FILTER DROPDOWN LABEL: "Position Filter:"
         self.position_filter_dropdown_label = ctk.CTkLabel(
             self.position_search_frame, text=f"Position Filter", fg_color="transparent"
-        ).grid(row=1, column=0)
+        )
+        self.position_filter_dropdown_label.grid(row=1, column=0)
 
         # POSITION SEARCH MENU | POSITION HEADING/FILTER DROPDOWN-BOX: "Position Heading"
         self.position_headings = [
@@ -101,14 +107,16 @@ class StockerAccounts(ctk.CTkFrame):
         ]
         self.position_search_heading_dropdown = ctk.CTkComboBox(
             master=self.position_search_frame, values=self.position_headings
-        ).grid(row=1, column=1)
+        )
+        self.position_search_heading_dropdown.grid(row=1, column=1)
 
         # POSITION SEARCH MENU | POSITION SEARCHBOX LABEL: "Search Position(s)"
         self.positions_search_searchbox_label = ctk.CTkLabel(
             self.position_search_frame,
             text=f"Search Position(s)",
             fg_color="transparent",
-        ).grid(row=2, column=0)
+        )
+        self.positions_search_searchbox_label.grid(row=2, column=0)
 
         # POSITION SEARCH MENU | POSITION SEARCHBOX: "Ticker"
         self.positions_search_searchbox = ctk.CTkEntry(
@@ -118,7 +126,8 @@ class StockerAccounts(ctk.CTkFrame):
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT BUTTON: "Search Position(s)"
         self.positions_search_submit_button = ctk.CTkButton(
             master=self.position_search_frame, text="Search Position(s)"
-        ).grid(row=3, column=0, columnspan=2)
+        )
+        self.positions_search_submit_button.grid(row=3, column=0, columnspan=2)
 
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT STATUS LABEL: "Status: ..."
         self.positions_search_status_message = "N/A"
@@ -126,7 +135,8 @@ class StockerAccounts(ctk.CTkFrame):
             self.position_search_frame,
             text=f"Position Search Status: {self.positions_search_status_message}",
             fg_color="transparent",
-        ).grid(row=4, column=0, columnspan=2)
+        )
+        self.position_search_status_label.grid(row=4, column=0, columnspan=2)
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION HEADER -------------------------->
 
@@ -152,12 +162,13 @@ class StockerAccounts(ctk.CTkFrame):
         self.selected_account_information_header.columnconfigure(2, weight=1)
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT LABEL: "Selected Account: ..."
-        self.selected_account_name = "Roth IRA"
+        self.selected_account_name = "All Accounts"
         self.selected_account_label = ctk.CTkLabel(
             self.selected_account_information_header,
             text=f"Selected Account(s): {self.selected_account_name}",
             fg_color="transparent",
-        ).grid(
+        )
+        self.selected_account_label.grid(
             row=0,
             column=0,
             sticky="w",
@@ -165,38 +176,43 @@ class StockerAccounts(ctk.CTkFrame):
         )
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT TOTAL VALUE LABEL: "Total Value: ..."
-        self.selected_account_total_value = 1500.0
+        self.selected_account_total_value = self.PORTFOLIO.total_value
         self.selected_account_total_value_label = ctk.CTkLabel(
             self.selected_account_information_header,
             text=f"Total Value: ${self.selected_account_total_value}",
             fg_color="transparent",
-        ).grid(row=1, column=0, padx=15, sticky="w")
+        )
+        self.selected_account_total_value_label.grid(row=1, column=0, padx=15, sticky="w")
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT CASH RESERVE LABEL: "Cash Reserve"
-        self.selected_account_cash = 500.00
+        self.selected_account_cash = self.PORTFOLIO.cash
         self.selected_account_cash_label = ctk.CTkLabel(
             self.selected_account_information_header,
             text=f"Cash Reserve: ${self.selected_account_cash}",
             fg_color="transparent",
-        ).grid(row=0, column=1)
+        )
+        self.selected_account_cash_label.grid(row=0, column=1)
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT UPDATE CASH BUTTON: "Update Cash"
         self.selected_account_update_cash_button = ctk.CTkButton(
             self.selected_account_information_header, text=f"Update Cash"
-        ).grid(row=1, column=1)
+        )
+        self.selected_account_update_cash_button.grid(row=1, column=1)
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT STOCK ASSET VALUE LABEL: "Stock Asset Value: ..."
-        self.selected_account_stock_asset_value = 1000.0
+        self.selected_account_stock_asset_value = self.PORTFOLIO.stock_asset_value
         self.selected_account_stock_asset_value_label = ctk.CTkLabel(
             self.selected_account_information_header,
             text=f"Stock Asset Value: ${self.selected_account_stock_asset_value}",
             fg_color="transparent",
-        ).grid(row=0, column=2)
+        )
+        self.selected_account_stock_asset_value_label.grid(row=0, column=2)
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT STOCK ASSET VALUE BUTTON: "Refresh Value"
         self.selected_account_refresh_value_button = ctk.CTkButton(
             self.selected_account_information_header, text=f"Refresh Value"
-        ).grid(row=1, column=2)
+        )
+        self.selected_account_refresh_value_button.grid(row=1, column=2)
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION TABLE -------------------------->
 
@@ -206,31 +222,8 @@ class StockerAccounts(ctk.CTkFrame):
         self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(15, 0))
 
         # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
-            # "ticker",
-            # "share count",
-            # "average cost",
-            # "current price",
-            # "asset value",
-            # "unrealized gain",
-            # "parent account",
-        data = {}
-
-        for account in self.PORTFOLIO.accounts.values():
-            account_data = []
-            account_positions = account.positions.values()
-            for position in account_positions:
-                account_data.append([position.ticker, position.shares, position.average_cost, position.current_price, position.total_value, position.unrealized_gain, position.parent_account.name])
-                
-            data[account.name] = account_data
-
-        print(data)
-
-        all = [self.position_headings]
-        for account in data.values():
-            all += account
-        
-        print(all)
-        self.table_data = all
+    
+        self.table_data = self.populate_position_matrix("all accounts")
             
         
 
@@ -244,3 +237,70 @@ class StockerAccounts(ctk.CTkFrame):
             wraplength=75,
         )
         self.account_information_table.pack(pady=(15))
+
+
+    def populate_position_matrix(self, account_name_keyword: str) -> list:
+        # "ticker",
+        # "share count",
+        # "average cost",
+        # "current price",
+        # "asset value",
+        # "unrealized gain",
+        # "parent account",
+        data = {}
+
+        for account in self.PORTFOLIO.accounts.values():
+            account_data = []
+            account_positions = account.positions.values()
+            for position in account_positions:
+                account_data.append([position.ticker, position.shares, position.average_cost, position.current_price, position.total_value, position.unrealized_gain, position.parent_account.name])
+                
+            data[account.name] = account_data
+
+        account_positions = [self.position_headings]
+        
+        account_name_keyword = account_name_keyword.lower()
+        match account_name_keyword:
+            
+            case "all accounts":
+
+                for account in data.values():
+                    account_positions += account
+            
+            case _:
+                account_positions += data.get(account_name_keyword, None)
+        return account_positions
+
+    def populate_account_info_heading(self, account_name_keyword: str):
+        account_name_keyword = account_name_keyword.lower()
+        match account_name_keyword:
+
+            case "all accounts":
+                self.selected_account_label.configure(text=f"Selected Account(s): All Accounts")
+                self.selected_account_total_value_label.configure(text=f"Total Value: ${self.PORTFOLIO.total_value}")
+                self.selected_account_cash_label.configure(text=f"Cash Reserve: ${self.PORTFOLIO.cash}")
+                self.selected_account_stock_asset_value_label.configure(text=f"Stock Asset Value: ${self.PORTFOLIO.stock_asset_value}")
+            case _:
+                selected_account = self.PORTFOLIO.accounts.get(account_name_keyword, None)
+                if selected_account is None:
+                    raise ValueError(f"AccountHeadingError: {account_name_keyword} not found in {self.PORTFOLIO.name.title()}.")
+                self.selected_account_label.configure(text=f"Selected Account(s): {selected_account.name.title()}")
+                self.selected_account_total_value_label.configure(text=f"Total Value: ${selected_account.total_value}")
+                self.selected_account_cash_label.configure(text=f"Cash Reserve: ${selected_account.cash}")
+                self.selected_account_stock_asset_value_label.configure(text=f"Stock Asset Value: ${selected_account.stock_asset_value}")
+
+    def view_accounts(self):
+
+        account_name = self.select_accounts_dropdown_dropdown.get()
+
+        if account_name is None:
+            print("Account name is None.")
+            return
+        account_name = account_name.lower()
+
+        positions = self.populate_position_matrix(account_name_keyword=account_name)
+        self.account_information_table.configure(values=positions)
+
+        self.populate_account_info_heading(account_name_keyword=account_name)
+
+

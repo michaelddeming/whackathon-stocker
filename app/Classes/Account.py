@@ -16,7 +16,7 @@ class Account:
         positions: dict[str, Position] = None,
     ):
 
-        self.name = name
+        self.name = name.lower()
         self.institution = institution
         self._parent_portfolio = parent_portfolio
         self._stock_asset_value = (

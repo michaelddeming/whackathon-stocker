@@ -7,7 +7,7 @@ from typing import Self
 class Portfolio:
 
     defaults = {
-        "name": "New Portfolio",
+        "name": "new portfolio",
         "accounts": {},
         "cash": 0.0,
         "stock_asset_value": 0.0,
@@ -23,7 +23,7 @@ class Portfolio:
         unrealized_gain: float | None = None,
     ):
 
-        self.name = name if name is not None else self.defaults.get("name")
+        self.name = name.lower() if name is not None else self.defaults.get("name")
         self.accounts = (
             accounts  if accounts is not None else self.defaults.get("accounts")
         )
