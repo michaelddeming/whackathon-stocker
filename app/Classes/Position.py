@@ -107,7 +107,7 @@ class Position:
                 )
 
     def to_dict(self):
-        return {
+        position_dict = {
             "ticker": self.ticker,
             "parent_account": (
                 (self.parent_account.name, self.parent_account.institution)
@@ -117,6 +117,8 @@ class Position:
             "shares": self.shares,
             "average_cost": self.average_cost,
         }
+        print("Position dictionary successfully created!")
+        return position_dict
     
     @classmethod
     def from_dict(cls, position: dict) -> Self:

@@ -88,6 +88,7 @@ class Portfolio:
         return portfolio_dict
     
     def refresh_portfolio(self):
+        print(f"Refreshing Portfolio: {self.name.title()}")
         updated_stock_asset_value = 0.0
         updated_unrealized_gain = 0.0
         updated_cash = 0.0
@@ -100,6 +101,9 @@ class Portfolio:
         self._unrealized_gain = updated_unrealized_gain
         self._cash = updated_cash
 
+        self.save_portfolio()
+    
+
 
     def save_portfolio(self) -> None:
         temp_path = "app/database/portfolio.json"
@@ -107,6 +111,7 @@ class Portfolio:
             with open(temp_path, "w", newline="") as file:
 
                 json.dump(self.to_dict(), file, indent=4)
+                print("Portfolio successfully saved!")
         except FileNotFoundError:
             raise ValueError(
                 "PortfolioError: Database file 'portfolio.json' does not exist."
@@ -129,6 +134,7 @@ class Portfolio:
                 
                 # overwrite the portfolio.accounts dict object structure with the converted accounts.
                 loaded_portfolio.accounts = converted_accounts
+                loaded_portfolio.refresh_portfolio()
                 return loaded_portfolio
                 
         except FileNotFoundError:

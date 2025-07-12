@@ -32,9 +32,6 @@ class App(ctk.CTk):
         temp_path = "app/database/portfolio.json"
 
         PORTFOLIO = Portfolio.load_portfolio(file_path=temp_path)
-        PORTFOLIO.refresh_portfolio()
-
-
 
 
         # add custom widgets as self.widget objects to be included in App()

@@ -209,7 +209,7 @@ class StockerAccounts(ctk.CTkFrame):
 
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT STOCK ASSET VALUE BUTTON: "Refresh Value"
         self.selected_account_refresh_value_button = ctk.CTkButton(
-            self.selected_account_information_header, text=f"Refresh Value"
+            self.selected_account_information_header, text=f"Refresh Value", command=self.refresh_account_view
         )
         self.selected_account_refresh_value_button.grid(row=1, column=2)
 
@@ -302,13 +302,22 @@ class StockerAccounts(ctk.CTkFrame):
 
         updated_position_matrix = self.populate_position_matrix(account_name_keyword=account_name)
         self.account_information_table.configure(values=updated_position_matrix)
-        if self.populate_position_matrix(account_name_keyword=account_name)[1]:
-            self.update_account_status_label(status_message="positions found\naccount view updated!")
+        if len(updated_position_matrix) > 1:
+            self.update_account_status_label(status_message=f"{len(updated_position_matrix) - 1} Position(s) found!\nAccount View updated.")
         else:
-            self.update_account_status_label(status_message="no positions found\naccount view updated!")
+            self.update_account_status_label(status_message=f"No Positions found!\nAccount View updated.")
 
         self.populate_account_info_heading(account_name_keyword=account_name)
 
 
     def update_account_status_label(self, status_message: str):
-        self.select_accounts_dropdown_status_label.configure(text=f"Status: {status_message.title()}")
+        self.select_accounts_dropdown_status_label.configure(text=f"Status: {status_message}")
+
+    def refresh_account_view(self):
+        self.PORTFOLIO.refresh_portfolio()
+        self.view_accounts()
+        
+
+                
+
+

@@ -136,7 +136,7 @@ class Account:
 
     def to_dict(self) -> dict:
 
-        return {
+        account_dict = {
             "name": self.name,
             "institution": self.institution,
             "parent_portfolio": self.parent_portfolio.name,
@@ -149,6 +149,8 @@ class Account:
                 else []
             ),
         }
+        print("Account dictionary successfully created!")
+        return account_dict
     
     def refresh_account(self) -> None:
         updated_stock_asset_value = 0
