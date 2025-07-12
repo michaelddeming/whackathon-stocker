@@ -61,10 +61,9 @@ class StockerAccounts(ctk.CTkFrame):
         self.submit_account_view_button.grid(row=2, column=0, columnspan=2)
 
         # ACCOUNT SELECT DROPDOWN | STATUS LABEL: "Select Account(s)"
-        self.account_dropdown_status_message = "N/A"
         self.select_accounts_dropdown_status_label = ctk.CTkLabel(
             self.account_select_frame,
-            text=f"Status: {self.account_dropdown_status_message}",
+            text=f"Status: N/A",
             fg_color="transparent",
         )
         self.select_accounts_dropdown_status_label.grid(row=3, column=0, columnspan=2)
@@ -133,7 +132,7 @@ class StockerAccounts(ctk.CTkFrame):
         self.positions_search_status_message = "N/A"
         self.position_search_status_label = ctk.CTkLabel(
             self.position_search_frame,
-            text=f"Position Search Status: {self.positions_search_status_message}",
+            text=f"Status: {self.positions_search_status_message}",
             fg_color="transparent",
         )
         self.position_search_status_label.grid(row=4, column=0, columnspan=2)
@@ -269,7 +268,10 @@ class StockerAccounts(ctk.CTkFrame):
             
             case _:
                 account_positions += data.get(account_name_keyword, None)
+        
+        # populate the positions matrix on the accounts page
         return account_positions
+        
 
     def populate_account_info_heading(self, account_name_keyword: str):
         account_name_keyword = account_name_keyword.lower()
@@ -298,9 +300,15 @@ class StockerAccounts(ctk.CTkFrame):
             return
         account_name = account_name.lower()
 
-        positions = self.populate_position_matrix(account_name_keyword=account_name)
-        self.account_information_table.configure(values=positions)
+        updated_position_matrix = self.populate_position_matrix(account_name_keyword=account_name)
+        self.account_information_table.configure(values=updated_position_matrix)
+        if self.populate_position_matrix(account_name_keyword=account_name)[1]:
+            self.update_account_status_label(status_message="positions found\naccount view updated!")
+        else:
+            self.update_account_status_label(status_message="no positions found\naccount view updated!")
 
         self.populate_account_info_heading(account_name_keyword=account_name)
 
 
+    def update_account_status_label(self, status_message: str):
+        self.select_accounts_dropdown_status_label.configure(text=f"Status: {status_message.title()}")
