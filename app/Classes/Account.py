@@ -149,6 +149,16 @@ class Account:
                 else []
             ),
         }
+    
+    def refresh_account(self) -> None:
+        updated_stock_asset_value = 0
+        updated_unrealized_gain = 0
+        for position in self.positions.values():
+            updated_stock_asset_value += position.total_value
+            updated_unrealized_gain += position.unrealized_gain
+        self._stock_asset_value = updated_stock_asset_value
+        self._unrealized_gain = updated_unrealized_gain
+
     @classmethod
     def from_dict(cls, account: dict) -> Self:
 
@@ -164,9 +174,7 @@ class Account:
             new_account.positions[new_position.ticker] = new_position
 
         return new_account
-
-
-
+    
     @property
     def total_value(self):
         return self._stock_asset_value + self._cash

@@ -86,6 +86,20 @@ class Portfolio:
         }
         print("Portfolio dictionary successfully created!")
         return portfolio_dict
+    
+    def refresh_portfolio(self):
+        updated_stock_asset_value = 0.0
+        updated_unrealized_gain = 0.0
+        updated_cash = 0.0
+        for account in self.accounts.values():
+            account.refresh_account()
+            updated_stock_asset_value += account.stock_asset_value
+            updated_unrealized_gain += account.unrealized_gain
+            updated_cash += account.cash
+        self._stock_asset_value = updated_stock_asset_value
+        self._unrealized_gain = updated_unrealized_gain
+        self._cash = updated_cash
+
 
     def save_portfolio(self) -> None:
         temp_path = "app/database/portfolio.json"
