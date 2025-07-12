@@ -17,16 +17,14 @@ def main():
     test_account2 = Account(name="Roth IRA", institution="Fidelity")
 
     # Add Account(s) to Portfolio
-    test_portfolio.add_account(test_account1)
-    test_portfolio.add_account(test_account2)
+    test_portfolio.add_accounts(test_account1, test_account2)
 
     # Create Position(s)
     test_position1 = Position(ticker="aapl", shares=1, average_cost=0)
-    test_position2 = Position(ticker="aapl", shares=1, average_cost=0)
+    test_position2 = Position(ticker="msft", shares=1, average_cost=0)
 
     # Add Position(s) to Account(s)
-    test_account1.add_position(test_position1)
-    test_account2.add_position(test_position2)
+    test_account1.add_positions(test_position1, test_position2)
 
     test_portfolio.save_portfolio()
     loaded_portfolio = Portfolio.load_portfolio("app/database/portfolio.json")
