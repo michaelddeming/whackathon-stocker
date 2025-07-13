@@ -36,22 +36,23 @@ class Portfolio:
         )
         print(f"New Portfolio '{self.name}' successfully created.\n")
 
-    def add_account(self, account: Account) -> None:
-        # sync the account to the portfolio
-        account._parent_portfolio = self
+    def add_accounts(self, *accounts: list[Account]) -> None:
+        for account in accounts:
+            # sync the account to the portfolio
+            account._parent_portfolio = self
 
-        # add the account to the accounts data struct
-        self.accounts[account.name] = account
+            # add the account to the accounts data struct
+            self.accounts[account.name] = account
 
-        # increase the Portfolio stock_asset_value, unrealized_gain, and cash proportionally
-        self._stock_asset_value += account.stock_asset_value
-        self._unrealized_gain += account.unrealized_gain
-        self._cash += account.cash
+            # increase the Portfolio stock_asset_value, unrealized_gain, and cash proportionally
+            self._stock_asset_value += account.stock_asset_value
+            self._unrealized_gain += account.unrealized_gain
+            self._cash += account.cash
 
-        # print success message
-        print(
-            f"{account.name.title()} held with {account.institution.title()} added to {self.name.title()} Portfolio successfully.\n"
-        )
+            # print success message
+            print(
+                f"{account.name.title()} held with {account.institution.title()} added to {self.name.title()} Portfolio successfully.\n"
+            )
 
     def delete_account(self, account: Account, account_name: str):
         if account:
