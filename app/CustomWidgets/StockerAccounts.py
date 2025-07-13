@@ -127,7 +127,13 @@ class StockerAccounts(ctk.CTkFrame):
         self.positions_search_submit_button = ctk.CTkButton(
             master=self.position_search_frame, text="Search Position(s)", command=self.search_positions
         )
-        self.positions_search_submit_button.grid(row=3, column=0, columnspan=2)
+        self.positions_search_submit_button.grid(row=3, column=0)
+
+        # POSITION SEARCH MENU | POSITION SEARCH RESET BUTTON: "Reset Position(s)"
+        self.positions_search_reset_button = ctk.CTkButton(
+            master=self.position_search_frame, text="Reset Position(s)", command=self.reset_positions
+        )
+        self.positions_search_reset_button.grid(row=3, column=1)
 
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT STATUS LABEL: "Status: ..."
         self.positions_search_status_message = "N/A"
@@ -392,7 +398,9 @@ class StockerAccounts(ctk.CTkFrame):
             return []
         return [position for position in self.table_data[1:] if position[index] >= user_input]
 
-
+    def reset_positions(self):
+        self.account_information_table.configure(values=self.table_data, rows=len(self.table_data), columns=len(self.position_headings))
+        self.update_search_positions_status_label(status_message=f"Reset successful!\nPosition View reset.")
                 
 
 
