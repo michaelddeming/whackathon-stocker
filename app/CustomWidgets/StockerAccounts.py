@@ -120,11 +120,12 @@ class StockerAccounts(ctk.CTkFrame):
         # POSITION SEARCH MENU | POSITION SEARCHBOX: "Ticker"
         self.positions_search_searchbox = ctk.CTkEntry(
             master=self.position_search_frame, placeholder_text="Type Here"
-        ).grid(row=2, column=1)
+        )
+        self.positions_search_searchbox.grid(row=2, column=1)
 
         # POSITION SEARCH MENU | POSITION SEARCH SUBMIT BUTTON: "Search Position(s)"
         self.positions_search_submit_button = ctk.CTkButton(
-            master=self.position_search_frame, text="Search Position(s)"
+            master=self.position_search_frame, text="Search Position(s)", command=self.search_positions
         )
         self.positions_search_submit_button.grid(row=3, column=0, columnspan=2)
 
@@ -301,11 +302,12 @@ class StockerAccounts(ctk.CTkFrame):
         account_name = account_name.lower()
 
         updated_position_matrix = self.populate_position_matrix(account_name_keyword=account_name)
-        self.account_information_table.configure(values=updated_position_matrix)
+        self.table_data = updated_position_matrix
+        self.account_information_table.configure(values=updated_position_matrix, rows=len(updated_position_matrix), columns=len(self.position_headings))
         if len(updated_position_matrix) > 1:
             self.update_account_status_label(status_message=f"{len(updated_position_matrix) - 1} Position(s) found!\nAccount View updated.")
         else:
-            self.update_account_status_label(status_message=f"No Positions found!\nAccount View updated.")
+            self.update_account_status_label(status_message=f"No Positions found!\nAccount View not updated.")
 
         self.populate_account_info_heading(account_name_keyword=account_name)
 
@@ -317,6 +319,79 @@ class StockerAccounts(ctk.CTkFrame):
         self.PORTFOLIO.refresh_portfolio()
         self.view_accounts()
         
+    def search_positions(self):
+
+        # get the filter and user search input
+
+        search_filter = self.position_search_heading_dropdown.get()
+        user_input = self.positions_search_searchbox.get().strip()
+
+        if search_filter not in self.position_headings:
+            self.update_search_positions_status_label(status_message=f"Invalid search filter!\nSelect filter option from dropdown.")
+            return
+
+        if user_input == "" or user_input == None:
+            self.update_search_positions_status_label(status_message=f"Invalid search input!\nSearch input can't be blank.")
+            return
+
+        filtered_positions = [self.position_headings]
+
+        match search_filter:
+
+            case "ticker":
+                user_input = user_input.lower()
+                index = self.position_headings.index("ticker")
+                filtered_positions.extend(position for position in self.table_data[1:] if position[index].lower() == user_input)
+
+                
+            case "share count":
+                filtered_positions.extend(self.position_filter_search_float_helper(user_input=user_input, heading_filter="share count"))
+
+            case "average cost":
+                filtered_positions.extend(self.position_filter_search_float_helper(user_input=user_input, heading_filter="average cost"))
+
+            case "current price":
+                filtered_positions.extend(self.position_filter_search_float_helper(user_input=user_input, heading_filter="current price"))
+
+            case "asset value":
+                filtered_positions.extend(self.position_filter_search_float_helper(user_input=user_input, heading_filter="asset value"))
+
+            case "unrealized gain":
+                filtered_positions.extend(self.position_filter_search_float_helper(user_input=user_input, heading_filter="unrealized gain"))
+
+            case "parent account":
+                user_input = user_input.lower()
+                index = self.position_headings.index("parent account")
+                filtered_positions.extend(position for position in self.table_data[1:] if position[index].lower() == user_input)
+                print(filtered_positions)
+
+        
+        if len(filtered_positions) > 1:
+            self.account_information_table.configure(values=filtered_positions, rows=len(filtered_positions), columns=len(self.position_headings))
+            self.update_search_positions_status_label(status_message=f"{len(filtered_positions) - 1} Position(s) found!\nPosition View updated.")
+    
+        else:
+            self.update_search_positions_status_label(status_message=f"No Positions found!\nPosition View not updated.")
+            return 
+
+ 
+
+    def update_search_positions_status_label(self, status_message: str) -> None:
+        self.position_search_status_label.configure(text=f"Status: {status_message}")
+
+    def position_filter_search_float_helper(self, user_input: str, heading_filter: str) -> list:
+        try:
+            user_input = float(user_input)
+        except ValueError:
+            self.update_search_positions_status_label(status_message=f"Invalid search input !\nInput could not be converted to float.")
+            return []
+        try:
+            index = self.position_headings.index(heading_filter)
+        except ValueError:
+            print("Invalid heading filter, heading not found.")
+            return []
+        return [position for position in self.table_data[1:] if position[index] >= user_input]
+
 
                 
 

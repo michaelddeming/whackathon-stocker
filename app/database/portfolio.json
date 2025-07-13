@@ -1,15 +1,15 @@
 {
     "name": "deming investments",
     "cash": 0.0,
-    "stock_asset_value": 422.32,
-    "unrealized_gain": 422.32,
+    "stock_asset_value": 5386.46,
+    "unrealized_gain": 5386.46,
     "accounts": [
         {
             "name": "individual taxable",
             "institution": "Robinhood",
             "parent_portfolio": "deming investments",
-            "stock_asset_value": 211.16,
-            "unrealized_gain": 211.16,
+            "stock_asset_value": 5244.36,
+            "unrealized_gain": 5244.36,
             "cash": 0.0,
             "positions": [
                 {
@@ -20,6 +20,15 @@
                     ],
                     "shares": 1.0,
                     "average_cost": 0.0
+                },
+                {
+                    "ticker": "msft",
+                    "parent_account": [
+                        "individual taxable",
+                        "Robinhood"
+                    ],
+                    "shares": 10.0,
+                    "average_cost": 0.0
                 }
             ]
         },
@@ -27,12 +36,12 @@
             "name": "roth ira",
             "institution": "Fidelity",
             "parent_portfolio": "deming investments",
-            "stock_asset_value": 211.16,
-            "unrealized_gain": 211.16,
+            "stock_asset_value": 142.1,
+            "unrealized_gain": 142.1,
             "cash": 0.0,
             "positions": [
                 {
-                    "ticker": "aapl",
+                    "ticker": "pltr",
                     "parent_account": [
                         "roth ira",
                         "Fidelity"
