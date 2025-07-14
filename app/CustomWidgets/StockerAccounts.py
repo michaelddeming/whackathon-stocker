@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from CTkTable import *
-
+from CustomWidgets.StockerAddPositionPopUp import StockerAddPositionPopUp
 
 class StockerAccounts(ctk.CTkFrame):
 
@@ -155,7 +155,7 @@ class StockerAccounts(ctk.CTkFrame):
             side="right", fill="both", expand=True, padx=(7.5, 15), pady=(5, 15)
         )
         self.selected_account_information_header = ctk.CTkFrame(
-            master=self.StockerAccountsRightFrame, height=75, fg_color="transparent"
+            master=self.StockerAccountsRightFrame, height=100, fg_color="transparent"
         )
         self.selected_account_information_header.pack_propagate(False)
         self.selected_account_information_header.pack(fill="x", pady=(15, 0))
@@ -163,6 +163,7 @@ class StockerAccounts(ctk.CTkFrame):
 
         self.selected_account_information_header.rowconfigure(0, weight=1)
         self.selected_account_information_header.rowconfigure(1, weight=1)
+        self.selected_account_information_header.rowconfigure(2, weight=1)
         self.selected_account_information_header.columnconfigure(0, weight=1)
         self.selected_account_information_header.columnconfigure(1, weight=1)
         self.selected_account_information_header.columnconfigure(2, weight=1)
@@ -190,6 +191,15 @@ class StockerAccounts(ctk.CTkFrame):
         )
         self.selected_account_total_value_label.grid(row=1, column=0, padx=15, sticky="w")
 
+        # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT UNREALIZED GAIN LABEL: "Unrealized Gain: ..."
+        self.selected_account_unrealized_gain = self.PORTFOLIO.unrealized_gain
+        self.selected_account_unrealized_gain_label = ctk.CTkLabel(
+            self.selected_account_information_header,
+            text=f"Unrealized Gain: ${self.selected_account_unrealized_gain}",
+            fg_color="transparent",
+        )
+        self.selected_account_unrealized_gain_label.grid(row=2, column=0, padx=15, sticky="w")
+
         # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT CASH RESERVE LABEL: "Cash Reserve"
         self.selected_account_cash = self.PORTFOLIO.cash
         self.selected_account_cash_label = ctk.CTkLabel(
@@ -214,18 +224,24 @@ class StockerAccounts(ctk.CTkFrame):
         )
         self.selected_account_stock_asset_value_label.grid(row=0, column=2)
 
-        # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT STOCK ASSET VALUE BUTTON: "Refresh Value"
+        # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT REFRESH BUTTON: "Refresh Value"
         self.selected_account_refresh_value_button = ctk.CTkButton(
             self.selected_account_information_header, text=f"Refresh Value", command=self.refresh_account_view
         )
         self.selected_account_refresh_value_button.grid(row=1, column=2)
+
+        # SELECETED ACCOUNT INFORMATION HEADER | SELECTED ACCOUNT ADD POSITION BUTTON: "Add Position"
+        self.add_position_pop_up_window = None
+        self.selected_account_add_position_button = ctk.CTkButton(
+            self.selected_account_information_header, text=f"Add Position", command=self.add_position)
+        self.selected_account_add_position_button.grid(row=2, column=2)
 
         # <-------------------------- SELECETED ACCOUNT INFORMATION TABLE -------------------------->
 
         self.selected_account_information_table_frame = ctk.CTkScrollableFrame(
             master=self.StockerAccountsRightFrame, fg_color="transparent"
         )
-        self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(15, 0))
+        self.selected_account_information_table_frame.pack(fill="both", expand=True, pady=(5, 0))
 
         # SELECETED ACCOUNT INFORMATION TABLE | SELECETED ACCOUNT INFORMATION TABLE
     
@@ -242,7 +258,7 @@ class StockerAccounts(ctk.CTkFrame):
             corner_radius=4,
             wraplength=75,
         )
-        self.account_information_table.pack(pady=(15))
+        self.account_information_table.pack()
 
 
     def populate_position_matrix(self, account_name_keyword: str) -> list:
@@ -289,6 +305,7 @@ class StockerAccounts(ctk.CTkFrame):
                 self.selected_account_total_value_label.configure(text=f"Total Value: ${self.PORTFOLIO.total_value}")
                 self.selected_account_cash_label.configure(text=f"Cash Reserve: ${self.PORTFOLIO.cash}")
                 self.selected_account_stock_asset_value_label.configure(text=f"Stock Asset Value: ${self.PORTFOLIO.stock_asset_value}")
+                self.selected_account_unrealized_gain_label.configure(text=f"Unrealized Gain: ${self.PORTFOLIO.unrealized_gain}")
             case _:
                 selected_account = self.PORTFOLIO.accounts.get(account_name_keyword, None)
                 if selected_account is None:
@@ -297,6 +314,7 @@ class StockerAccounts(ctk.CTkFrame):
                 self.selected_account_total_value_label.configure(text=f"Total Value: ${selected_account.total_value}")
                 self.selected_account_cash_label.configure(text=f"Cash Reserve: ${selected_account.cash}")
                 self.selected_account_stock_asset_value_label.configure(text=f"Stock Asset Value: ${selected_account.stock_asset_value}")
+                self.selected_account_unrealized_gain_label.configure(text=f"Unrealized Gain: ${selected_account.unrealized_gain}")
 
     def view_accounts(self):
 
@@ -402,5 +420,9 @@ class StockerAccounts(ctk.CTkFrame):
         self.account_information_table.configure(values=self.table_data, rows=len(self.table_data), columns=len(self.position_headings))
         self.update_search_positions_status_label(status_message=f"Reset successful!\nPosition View reset.")
                 
-
+    def add_position(self):
+            if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
+                self.add_position_pop_up_window = StockerAddPositionPopUp(self)  # create window if its None or destroyed
+            else:
+                self.add_position_pop_up_window.focus()  # if window exists focus it   
 
