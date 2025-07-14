@@ -421,8 +421,19 @@ class StockerAccounts(ctk.CTkFrame):
         self.update_search_positions_status_label(status_message=f"Reset successful!\nPosition View reset.")
                 
     def add_position(self):
-            if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
-                self.add_position_pop_up_window = StockerAddPositionPopUp(self)  # create window if its None or destroyed
+            curr_account = self.selected_account_label.cget("text")
+            label, curr_account = curr_account.split(":")
+            print(curr_account)
+
+            curr_account = curr_account.lower().strip()
+            if curr_account == "all accounts":
+                return
+            elif curr_account not in self.PORTFOLIO.accounts.keys():
+                return
             else:
-                self.add_position_pop_up_window.focus()  # if window exists focus it   
+                if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
+                    self.add_position_pop_up_window = StockerAddPositionPopUp(self)  # create window if its None or destroyed
+                else:
+                    self.add_position_pop_up_window.focus()  # if window exists focus it   
+            
 
