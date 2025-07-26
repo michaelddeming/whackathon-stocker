@@ -58,9 +58,9 @@ class Account:
                     f"Portfolio: {self._parent_portfolio.name.title()} successfully updated.\n"
                 )
 
-            Transaction(
-                transaction_type="add_position", amount=position.total_value, parent=self
-            )
+            # Transaction(
+            #     transaction_type="add_position", amount=position.total_value, parent=self
+            # )
 
     def delete_position(self, position: Position = None, ticker: str = None):
 

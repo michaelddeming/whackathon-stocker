@@ -12,7 +12,7 @@ class Position:
         parent_account=None,
     ):
 
-        self.ticker = ticker.lower()
+        self.ticker = self.check_ticker(ticker)
         self._parent_account = parent_account
         self.shares = float(shares)
         self.average_cost = float(average_cost)
@@ -120,6 +120,12 @@ class Position:
         print("Position dictionary successfully created!")
         return position_dict
     
+    def check_ticker(self, ticker: str) -> str:
+        ticker_info = yf.Ticker(ticker.lower().strip()).info
+        if not ticker_info:
+            raise ValueError("Error, Ticker Invalid.")
+        return ticker.lower()
+
     @classmethod
     def from_dict(cls, position: dict) -> Self:
         return cls(**position)

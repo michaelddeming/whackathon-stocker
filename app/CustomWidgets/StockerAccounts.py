@@ -428,12 +428,12 @@ class StockerAccounts(ctk.CTkFrame):
             curr_account = curr_account.lower().strip()
             if curr_account == "all accounts":
                 return
-            elif curr_account not in self.PORTFOLIO.accounts.keys():
+            account = self.PORTFOLIO.accounts.get(curr_account, None)
+            if account is None:
                 return
+            if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
+                self.add_position_pop_up_window = StockerAddPositionPopUp(master=self, account=account)  # create window if its None or destroyed
             else:
-                if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
-                    self.add_position_pop_up_window = StockerAddPositionPopUp(self)  # create window if its None or destroyed
-                else:
-                    self.add_position_pop_up_window.focus()  # if window exists focus it   
-            
+                self.add_position_pop_up_window.focus()  # if window exists focus it   
+        
 
