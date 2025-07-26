@@ -1,8 +1,8 @@
 {
     "name": "deming investments",
     "cash": 0.0,
-    "stock_asset_value": 754.52,
-    "unrealized_gain": 754.52,
+    "stock_asset_value": 2022.75,
+    "unrealized_gain": 2022.75,
     "accounts": [
         {
             "name": "individual taxable",
@@ -45,12 +45,39 @@
             "name": "roth ira",
             "institution": "Fidelity",
             "parent_portfolio": "deming investments",
-            "stock_asset_value": 158.8,
-            "unrealized_gain": 158.8,
+            "stock_asset_value": 1427.03,
+            "unrealized_gain": 1427.03,
             "cash": 0.0,
             "positions": [
                 {
                     "ticker": "pltr",
+                    "parent_account": [
+                        "roth ira",
+                        "Fidelity"
+                    ],
+                    "shares": 1.0,
+                    "average_cost": 0.0
+                },
+                {
+                    "ticker": "rddt",
+                    "parent_account": [
+                        "roth ira",
+                        "Fidelity"
+                    ],
+                    "shares": 1.0,
+                    "average_cost": 0.0
+                },
+                {
+                    "ticker": "mstr",
+                    "parent_account": [
+                        "roth ira",
+                        "Fidelity"
+                    ],
+                    "shares": 1.0,
+                    "average_cost": 0.0
+                },
+                {
+                    "ticker": "meta",
                     "parent_account": [
                         "roth ira",
                         "Fidelity"

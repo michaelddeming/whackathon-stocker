@@ -71,6 +71,7 @@ class StockerAddPositionPopUp(ctk.CTkToplevel):
         new_position = Position(ticker=ticker, shares=share_count, average_cost=average_cost)
         self.account.add_positions(new_position)
         self.positions_table.add_row([new_position.ticker, new_position.shares, new_position.average_cost, new_position.current_price, new_position.total_value, new_position.unrealized_gain, new_position.parent_account.name])
+        self.master.populate_account_info_heading(account_name_keyword=self.account.name)
         
 
 
