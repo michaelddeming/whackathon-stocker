@@ -432,7 +432,7 @@ class StockerAccounts(ctk.CTkFrame):
             if account is None:
                 return
             if self.add_position_pop_up_window is None or not self.add_position_pop_up_window.winfo_exists():
-                self.add_position_pop_up_window = StockerAddPositionPopUp(master=self, account=account)  # create window if its None or destroyed
+                self.add_position_pop_up_window = StockerAddPositionPopUp(master=self, account=account, positions_table=self.account_information_table)  # create window if its None or destroyed
             else:
                 self.add_position_pop_up_window.focus()  # if window exists focus it   
         

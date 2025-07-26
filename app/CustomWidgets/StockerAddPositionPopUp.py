@@ -3,11 +3,12 @@ from Classes.Position import Position
 from Classes.Account import Account
 
 class StockerAddPositionPopUp(ctk.CTkToplevel):
-    def __init__(self, account: Account, *args, **kwargs):
+    def __init__(self, account: Account, positions_table, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.geometry("400x300")
         self.attributes("-topmost", True)
         self.account = account
+        self.positions_table = positions_table
         
         for i in range(5):
             self.rowconfigure(i, weight=1)
@@ -69,6 +70,7 @@ class StockerAddPositionPopUp(ctk.CTkToplevel):
         
         new_position = Position(ticker=ticker, shares=share_count, average_cost=average_cost)
         self.account.add_positions(new_position)
+        self.positions_table.add_row([new_position.ticker, new_position.shares, new_position.average_cost, new_position.current_price, new_position.total_value, new_position.unrealized_gain, new_position.parent_account.name])
         
 
 
